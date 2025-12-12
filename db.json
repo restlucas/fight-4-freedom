@@ -1,0 +1,36 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Admin",
+      "username": "admin",
+      "password": "123",
+      "createdAt": "2021-01-01",
+      "updatedAt": "2021-01-01",
+      "role": "admin",
+      "ea_id": "Admin#123",
+      "platform": "PC",
+      "avatar": "/images/tatical-military.jpg",
+      "bio": "I am an admin",
+      "rank": "major",
+      "medals": [],
+      "stats": {}
+    },
+    {
+      "id": 2,
+      "name": "User",
+      "username": "user",
+      "password": "123",
+      "createdAt": "2021-01-01",
+      "updatedAt": "2021-01-01",
+      "role": "user",
+      "ea_id": "User#123",
+      "platform": "PC",
+      "avatar": "/images/tatical-military.jpg",
+      "bio": "I am a user",
+      "rank": "recruta",
+      "medals": [],
+      "stats": {}
+    }
+  ]
+}
