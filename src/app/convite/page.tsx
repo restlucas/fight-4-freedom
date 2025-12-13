@@ -122,8 +122,8 @@ export default function InvitePage() {
           <div className="flex h-10 w-10 items-center justify-center rounded bg-primary">
             <Target className="h-6 w-6 text-primary-foreground" />
           </div>
-          <span className="text-6xl font-bold tracking-tight">
-            <span className="text-primary">FIGHT 4 FREEDOM</span>
+          <span className="text-4xl lg:text-6xl font-bold tracking-tight">
+            <span className="text-primary text-nowrap">FIGHT 4 FREEDOM</span>
           </span>
         </div>
 
