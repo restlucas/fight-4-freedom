@@ -1,11 +1,9 @@
-import { PrismaClient, Role, Status } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const email = "admin@admin.com";
-
   await prisma.user.upsert({
     where: { username: "melansia" },
     update: {},
@@ -14,8 +12,8 @@ async function main() {
       username: "melansia",
       password: await bcrypt.hash("slvlucas1", 10),
       ea_id: "RRRRRRRREST",
-      role: Role.ADMIN,
-      status: Status.ACTIVE,
+      role: "ADMIN",
+      status: "ACTIVE",
       platform: "PC",
     },
   });
