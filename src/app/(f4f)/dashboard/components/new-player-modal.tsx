@@ -34,11 +34,14 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import { inviteUser } from "@/src/services/user.service";
 import { Check, Copy, Loader2 } from "lucide-react";
+import { resendInvite } from "@/src/services/invite.service";
 
 type ModalStep = "FORM" | "SUCCESS";
 
 type PlayerModalProps = {
   open: boolean;
+  step?: ModalStep;
+  playerId?: string;
   onOpenChange: (open: boolean) => void;
   onClose: () => void;
 };
@@ -56,11 +59,13 @@ type FieldData = ControllerRenderProps<FormData, keyof FormData>;
 
 export function NewPlayerModal({
   open,
+  step,
+  playerId,
   onOpenChange,
   onClose,
 }: PlayerModalProps) {
   const [submitting, setSubmitting] = useState(false);
-  const [step, setStep] = useState<ModalStep>("FORM");
+  const [currentStep, setCurrentStep] = useState<ModalStep>(step ?? "FORM");
   const [inviteLink, setInviteLink] = useState<{
     token: string | null;
     player_name: string | null;
@@ -82,7 +87,6 @@ export function NewPlayerModal({
 
   const inviteMessage = useMemo(() => {
     if (!inviteLink.player_name || !inviteLink.token) return "";
-
     return `Olá soldado ${inviteLink.player_name}, você foi convidado para se juntar ao clã F4F.\nEstamos ansiosos para te ver na nossa equipe!\n\nClique neste link para se cadastrar: ${inviteLink.token}`;
   }, [inviteLink]);
 
@@ -94,6 +98,19 @@ export function NewPlayerModal({
         setCopied(false);
       }, 2000);
     }
+  };
+
+  const handleResendInvite = async (playerId: string) => {
+    setSubmitting(true);
+
+    const response = await resendInvite(playerId);
+
+    setInviteLink({
+      token: response.token,
+      player_name: response.player_name,
+    });
+
+    setSubmitting(false);
   };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -112,7 +129,7 @@ export function NewPlayerModal({
         token: response.token,
         player_name: response.player_name,
       });
-      setStep("SUCCESS");
+      setCurrentStep("SUCCESS");
     } catch (error) {
       console.error("Erro ao enviar o formulário:", error);
     } finally {
@@ -121,23 +138,29 @@ export function NewPlayerModal({
   };
 
   useEffect(() => {
-    if (open) {
-      form.reset();
-      setStep("FORM");
-      setInviteLink({
-        token: null,
-        player_name: null,
-      });
+    if (step) setCurrentStep(step);
 
-      return;
+    if (playerId && step === "SUCCESS") {
+      handleResendInvite(playerId);
     }
+  }, [playerId, step]);
+
+  useEffect(() => {
+    form.reset();
   }, [open]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogTitle />
-        {step === "SUCCESS" && (
+
+        {submitting && (
+          <DialogDescription className="h-full w-full flex items-center justify-center">
+            <Loader2 className="w-14 h-14 animate-spin" />
+          </DialogDescription>
+        )}
+
+        {currentStep === "SUCCESS" && (
           <>
             <DialogHeader>
               <DialogTitle className="text-green-500 text-center text-2xl font-bold">
@@ -160,7 +183,7 @@ export function NewPlayerModal({
                       Clique neste link para se cadastrar:{" "}
                       <a
                         href={inviteLink.token || ""}
-                        className="text-primary underline text-nowrap"
+                        className="text-primary underline"
                       >
                         {inviteLink.token}
                       </a>
@@ -191,7 +214,7 @@ export function NewPlayerModal({
           </>
         )}
 
-        {step === "FORM" && (
+        {currentStep === "FORM" && (
           <>
             <DialogHeader>
               <DialogTitle>Adicionar Novo Jogador</DialogTitle>

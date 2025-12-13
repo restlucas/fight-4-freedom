@@ -40,6 +40,7 @@ import {
   XIcon,
   ClockIcon,
   BanIcon,
+  RefreshCcw,
 } from "lucide-react";
 import { medals } from "@/src/lib/mock-data";
 import { NewPlayerModal } from "./components/new-player-modal";
@@ -136,6 +137,11 @@ export default function DashboardPage() {
     setSelectedMedal(null);
   };
 
+  const handleResendInvite = (playerId: string) => {
+    setOpenPlayerModal(true);
+    setSelectedPlayer(players.find((player) => player.id === playerId) || null);
+  };
+
   return (
     <ProtectedRoute requiredRole={["ADMIN"]}>
       <div className="container mx-auto px-4 py-8">
@@ -211,6 +217,8 @@ export default function DashboardPage() {
                           player.status
                         );
 
+                        const enableResendInvite = player.status === "PENDING";
+
                         return (
                           <TableRow key={player.id}>
                             <TableCell className="font-semibold">
@@ -244,6 +252,19 @@ export default function DashboardPage() {
                                     <p>{playerStatusTooltip}</p>
                                   </HoverCardContent>
                                 </HoverCard>
+
+                                {enableResendInvite && (
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-8 w-8"
+                                    onClick={() => {
+                                      handleResendInvite(player.id);
+                                    }}
+                                  >
+                                    <RefreshCcw className="h-4 w-4" />
+                                  </Button>
+                                )}
 
                                 <Button
                                   variant="ghost"
@@ -336,6 +357,8 @@ export default function DashboardPage() {
 
         <NewPlayerModal
           open={openPlayerModal}
+          step={selectedPlayer ? "SUCCESS" : "FORM"}
+          playerId={selectedPlayer?.id}
           onOpenChange={handleClosePlayerModal}
           onClose={() => setOpenPlayerModal(false)}
         />
