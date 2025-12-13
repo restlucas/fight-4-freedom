@@ -16,13 +16,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/src/components/ui/select";
-import { Platform, User } from "@/src/lib/types";
+import { User } from "@/src/lib/types";
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
 } from "@/src/components/ui/avatar";
 import { ProtectedRoute } from "@/src/components/protected-route";
+import { Platform } from "@/src/lib/enums";
 
 type EditableFieldProps<T> = {
   value: T;
