@@ -1,15 +1,83 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
-generator client {
-  provider = "prisma-client"
-  output   = "../lib/generated/prisma"
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db" 
 }
 
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id              String @id @default(uuid())
+  ea_id           String @unique
+  name            String
+  username        String? @unique
+  password        String?
+  role            Role @default(USER) 
+  avatar          String?
+  bio             String?
+  rank            Ranks @default(RECRUTA)
+  medals          Medal[]
+  trackergg_link  String?
+  platform        Platform
+  stats           Json?
+  status          Status @default(PENDING)
+
+  invite          Invite[]
+
+  createdAt DateTime @default(now())
+}
+
+model Invite {
+  id          String   @id @default(uuid())
+  user_id     String
+  token       String   @unique
+  expiresAt   DateTime
+  used        Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  usedAt      DateTime?
+
+  user User @relation(fields: [user_id], references: [id])
+}
+
+model Medal {
+  id          String @id @default(uuid())
+  name        String
+  description String
+  rarity      String
+  criteria    String
+  createdAt   DateTime @default(now())
+  user_id     String?
+
+  User User? @relation(fields: [user_id], references: [id])
+}
+
+enum Platform {
+  PC
+  PLAYSTATION
+  XBOX
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum Ranks {
+  RECRUTA
+  SOLDADO
+  CABO
+  SARGENTO
+  TENENTE
+  CAPITAO
+  MAJOR
+  CORONEL
+  GENERAL
+}
+
+enum Status {
+  ACTIVE
+  INACTIVE
+  PENDING
+  BANNED
 }
