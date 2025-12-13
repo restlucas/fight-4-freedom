@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { medals } from "@/src/lib/mock-data";
-import { players } from "@/src/lib/mock-data";
 import { Card } from "@/src/components/ui/card";
 import { Badge } from "@/src/components/ui/badge";
 import { Trophy, Target, Award, Crown } from "lucide-react";
@@ -40,12 +39,9 @@ export default function MedalhasPage() {
   };
 
   const getMedalStats = (medalId: string) => {
-    const playersWithMedal = players.filter((player) =>
-      player.medals.includes(medalId)
-    );
     return {
-      count: playersWithMedal.length,
-      percentage: ((playersWithMedal.length / players.length) * 100).toFixed(1),
+      count: 0,
+      percentage: 0,
     };
   };
 
