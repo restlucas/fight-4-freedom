@@ -1,7 +1,7 @@
 import { api } from "@/src/lib/api";
 import { User } from "@/src/lib/types";
-import { Platform, Ranks, Status } from "@prisma/client";
 import { keepPreviousData, useInfiniteQuery } from "@tanstack/react-query";
+import { Platform, Rank, Status } from "../lib/enums";
 
 const PAGE_SIZE = 20;
 
@@ -10,7 +10,7 @@ const PAGE_SIZE = 20;
 type Filters = {
   username?: string;
   platform?: Platform;
-  rank?: Ranks;
+  rank?: Rank;
   status?: Status;
 };
 

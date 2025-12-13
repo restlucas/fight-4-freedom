@@ -1,5 +1,5 @@
-import { Platform, Status } from "@prisma/client";
 import { FilterConfig } from "../app/(f4f)/dashboard/components/data-filters";
+import { Platform, Status } from "../lib/enums";
 
 type UserFilters = {
   username?: string;

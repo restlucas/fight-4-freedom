@@ -1,6 +1,4 @@
-import { Status } from "@prisma/client";
-
-export type Platform = "PC" | "PLAYSTATION" | "XBOX";
+import { Platform, Status } from "./enums";
 
 export type User = {
   id: string;

@@ -52,10 +52,10 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/src/components/ui/hover-card";
-import { Platform, Status } from "@prisma/client";
 import { Skeleton } from "@/src/components/ui/skeleton";
 import { DataFilters } from "./components/data-filters";
 import { userFiltersConfig } from "@/src/utils/filters-config";
+import { Platform, Status } from "@/src/lib/enums";
 
 const getPlayerStatus = (status: Status) => {
   switch (status) {
