@@ -57,7 +57,9 @@ export function LoginDialog({ children }: LoginDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogTrigger asChild>
+        <div className="max-lg:px-4">{children}</div>
+      </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogTitle />
         <DialogHeader>

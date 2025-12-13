@@ -104,7 +104,7 @@ export function PlayerCard({ player, top }: any) {
 
       {/* Mobile View - Max 1023px*/}
       <Card className="p-4 hover:border-primary transition-all group overflow-hidden relative flex lg:hidden">
-        <div className="flex items-center gap-2">
+        <div className="flex items-start gap-2">
           <div className="w-28 h-28 rounded-lg overflow-hidden border-2 border-primary/30 bg-primary/5">
             {player.avatar ? (
               <Image
@@ -123,7 +123,7 @@ export function PlayerCard({ player, top }: any) {
             )}
           </div>
 
-          <div className="flex flex-1 h-28 flex-col gap-1 relative">
+          <div className="flex flex-1 min-h-28 flex-col gap-1 relative">
             <h3 className="text-xl font-bold group-hover:text-primary transition-colors truncate">
               {player.name}
             </h3>

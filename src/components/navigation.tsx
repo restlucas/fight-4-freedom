@@ -28,7 +28,7 @@ const navItems = [
 export function Navigation() {
   const pathname = usePathname();
 
-  const { user, isAdmin, initialized } = useAuth();
+  const { user, isAdmin, initialized, logout } = useAuth();
   const isLoggedIn = !!user;
 
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -103,7 +103,7 @@ export function Navigation() {
             </Button>
           </SheetTrigger>
           <SheetContent side="right">
-            <nav className="flex flex-col gap-4 mt-12">
+            <nav className="flex flex-col gap-4 mt-12 h-full">
               {navItems.map((item) => {
                 const Icon = item.icon;
                 return (
@@ -147,13 +147,22 @@ export function Navigation() {
                       {user?.name}
                     </Link>
 
-                    <Button variant="ghost" className="w-full mt-auto">
-                      Sair
-                    </Button>
+                    <div className="w-full mt-auto p-4">
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          logout();
+                          setSheetOpen(false);
+                        }}
+                        className="w-full"
+                      >
+                        Sair
+                      </Button>
+                    </div>
                   </>
                 ) : (
                   <LoginDialog>
-                    <Button variant="default" className="w-full gap-2 mt-auto">
+                    <Button variant="default" className="w-full gap-2">
                       <LogIn className="h-4 w-4" />
                       LOGIN
                     </Button>
