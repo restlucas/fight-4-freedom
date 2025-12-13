@@ -79,11 +79,17 @@ export default function JogadoresPage() {
       </Card>
 
       <div className="grid grid-cols-1 gap-3">
-        {isLoading
-          ? Array.from({ length: 5 }).map((_, i) => <SkeletonPlayers key={i} />)
-          : filteredPlayers.map((player) => (
-              <PlayerCard key={player.id} player={player} top={top} />
-            ))}
+        {isLoading ? (
+          Array.from({ length: 5 }).map((_, i) => <SkeletonPlayers key={i} />)
+        ) : filteredPlayers.length > 0 ? (
+          filteredPlayers.map((player) => (
+            <PlayerCard key={player.id} player={player} top={top} />
+          ))
+        ) : (
+          <Card className="p-12 text-center border-border">
+            Nenhum jogador encontrado.
+          </Card>
+        )}
       </div>
 
       {hasNextPage && (
