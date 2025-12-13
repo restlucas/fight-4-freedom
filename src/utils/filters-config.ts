@@ -1,10 +1,11 @@
 import { FilterConfig } from "../app/(f4f)/dashboard/components/data-filters";
-import { Platform, Status } from "../lib/enums";
+import { Platform, Rank, Status } from "../lib/enums";
 
 type UserFilters = {
   username?: string;
-  platform?: Platform;
-  status?: Status;
+  platform?: Platform | "all";
+  status?: Status | "all";
+  rank?: Rank | "all";
 };
 
 export const userFiltersConfig: FilterConfig<UserFilters>[] = [

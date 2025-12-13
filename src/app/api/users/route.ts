@@ -15,8 +15,8 @@ export async function GET(request: Request) {
     include: { medals: true },
     where: {
       ...(username &&
-        username !== "all" && {
-          username: { contains: username, mode: "insensitive" },
+        username !== "" && {
+          username: { contains: username },
         }),
       ...(platform && platform !== "all" && { platform: platform as Platform }),
       ...(rank && rank !== "all" && { rank: rank as Rank }),

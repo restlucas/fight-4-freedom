@@ -9,9 +9,9 @@ const PAGE_SIZE = 20;
 
 type Filters = {
   username?: string;
-  platform?: Platform;
-  rank?: Rank;
-  status?: Status;
+  platform?: Platform | "all";
+  rank?: Rank | "all";
+  status?: Status | "all";
 };
 
 interface UseUsersInfiniteProps {

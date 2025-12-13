@@ -55,7 +55,7 @@ import {
 import { Skeleton } from "@/src/components/ui/skeleton";
 import { DataFilters } from "./components/data-filters";
 import { userFiltersConfig } from "@/src/utils/filters-config";
-import { Platform, Status } from "@/src/lib/enums";
+import { Platform, Rank, Status } from "@/src/lib/enums";
 
 const getPlayerStatus = (status: Status) => {
   switch (status) {
@@ -88,9 +88,15 @@ export default function DashboardPage() {
 
   const [filters, setFilters] = useState<{
     username?: string;
-    platform?: Platform;
-    status?: Status;
-  }>({});
+    platform?: Platform | "all";
+    status?: Status | "all";
+    rank?: Rank | "all";
+  }>({
+    username: "",
+    platform: "all",
+    status: "all",
+    rank: "all",
+  });
 
   const {
     data,
