@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/src/lib/prisma";
 import bcrypt from "bcrypt";
-import { Platform, Ranks, Status } from "@prisma/client";
+import { Platform, Rank, Status } from "@/src/lib/enums";
+import { Prisma } from "@prisma/client";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -11,15 +12,16 @@ export async function GET(request: Request) {
   const rank = searchParams.get("rank");
   const status = searchParams.get("status");
 
-  console.log(platform);
-
   const where = {
     ...(username &&
       username !== "all" && {
-        username: { contains: username, mode: "insensitive" },
+        username: {
+          contains: username,
+          mode: "insensitive" as Prisma.QueryMode,
+        },
       }),
     ...(platform && platform !== "all" && { platform: platform as Platform }),
-    ...(rank && rank !== "all" && { rank: rank as Ranks }),
+    ...(rank && rank !== "all" && { rank: rank as Rank }),
     ...(status && status !== "all" && { status: status as Status }),
   };
 
