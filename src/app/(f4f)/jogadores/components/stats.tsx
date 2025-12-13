@@ -30,10 +30,16 @@ function StatBox({ icon, value, label, isTop }: StatBoxProps) {
         />
       )}
       {icon}
-      <span className={`text-xl font-bold ${isTop ? "text-primary" : ""}`}>
+      <span
+        className={`text-xl flex-nowrap font-bold ${
+          isTop ? "text-primary" : ""
+        }`}
+      >
         {value}
       </span>
-      <span className={`font-semibold ${isTop ? "text-primary" : ""}`}>
+      <span
+        className={`font-semibold flex-nowrap ${isTop ? "text-primary" : ""}`}
+      >
         {label}
       </span>
     </div>
@@ -46,7 +52,7 @@ export function PlayerStats({ player, top }: any) {
     : 0;
 
   return (
-    <div className="mt-auto flex flex-wrap gap-6">
+    <div className="mt-auto lg:flex lg:flex-wrap gap-3 grid grid-cols-2">
       <StatBox
         icon={<Crosshair className="h-5 w-5 text-primary/70" />}
         value={player.stats ? player.stats.kd.toLocaleString() : 0}

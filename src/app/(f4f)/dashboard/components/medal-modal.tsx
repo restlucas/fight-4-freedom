@@ -59,6 +59,7 @@ export function MedalModal({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
+        <DialogTitle />
         <DialogHeader>
           <DialogTitle>Criar Nova Medalha</DialogTitle>
           <DialogDescription>

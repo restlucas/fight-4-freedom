@@ -15,7 +15,6 @@ import {
   Crosshair,
   Clock,
   Percent,
-  Zap,
   Award,
 } from "lucide-react";
 import { fetchUser } from "@/src/services/user.service";
@@ -26,6 +25,7 @@ import {
   AvatarImage,
 } from "@/src/components/ui/avatar";
 import { User } from "@/src/lib/types";
+import { getInitials } from "@/src/utils/string";
 
 export default function PlayerPage() {
   const params = useParams();
@@ -71,37 +71,46 @@ export default function PlayerPage() {
 
       {/* Header do Jogador */}
       <Card className="p-8 mb-8 border-border">
-        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
+        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
           {/* Avatar Section */}
-          <Avatar className="relative w-32 h-32 md:w-40 md:h-40 rounded-lg overflow-hidden border-2 border-primary/50">
+          <Avatar className="max-lg:m-auto relative w-32 h-32 md:w-40 md:h-40 rounded-lg overflow-hidden border-2 border-primary/50">
             <AvatarImage src={player.avatar} alt={player.name} />
             <AvatarFallback className="text-5xl font-bold rounded-none">
-              {player.name.charAt(0)}
+              {getInitials(player.name)}
             </AvatarFallback>
           </Avatar>
 
           {/* Player Info */}
           <div className="flex-1">
-            <div className="flex flex-wrap items-center gap-3 mb-2">
+            <div className="flex items-center justify-center">
+              <Badge
+                variant="outline"
+                className="text-base px-4 mb-2 lg:hidden"
+              >
+                {player.platform}
+              </Badge>
+            </div>
+            <div className="flex flex-wrap items-center max-lg:justify-center gap-3 mb-2">
               <h1 className="text-4xl md:text-5xl font-bold">{player.name}</h1>
-              <Badge variant="outline" className="text-base px-4">
+              <Badge
+                variant="outline"
+                className="text-base px-4 hidden lg:block"
+              >
                 {player.platform}
               </Badge>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center max-lg:justify-center gap-2">
               <img src="/icons/ea.svg" alt="Logo" width={25} height={25} />
               <span className="font-mono text-foreground">{player.ea_id}</span>
             </div>
 
             {/* Bio */}
-            {player.bio && (
-              <p className="my-6  leading-relaxed">{player.bio}</p>
-            )}
+            {player.bio && <p className="my-6 leading-relaxed">{player.bio}</p>}
           </div>
 
           {/* Patente */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center max-lg:justify-center gap-2">
             <span>Membro desde:</span>
             <span className="text-foreground">
               {new Date(player.createdAt).toLocaleDateString("pt-BR", {
@@ -125,13 +134,13 @@ export default function PlayerPage() {
       </Card>
 
       {/* Estatísticas de Combate */}
-      <div className="mb-8">
+      <div className="mb-4">
         <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
           <Crosshair className="h-6 w-6 text-primary" />
           ESTATÍSTICAS DE COMBATE
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <StatCard
             icon={Target}
             value={player.stats?.kills.toLocaleString() || "0"}
@@ -191,7 +200,7 @@ export default function PlayerPage() {
       </div>
 
       {/* Estatísticas Adicionais */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
         <Card className="p-4 border-border gap-2">
           <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
             <Crosshair className="h-5 w-5 text-primary" />

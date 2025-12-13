@@ -63,9 +63,15 @@ export default function JogadoresPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-5xl font-bold mb-4">
-        NOSSOS <span className="text-primary">OPERADORES</span>
-      </h1>
+      <div className="mb-8">
+        <h1 className="text-5xl font-bold mb-4">
+          NOSSOS <span className="text-primary">OPERADORES</span>
+        </h1>
+        <p className="text-lg">
+          Explore os perfis de nossos operadores, veja suas estatísticas e
+          conquistas.
+        </p>
+      </div>
 
       <Card className="p-6 mb-8 border-border">
         <PlayerFilters

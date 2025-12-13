@@ -43,3 +43,18 @@ export async function POST(req: NextRequest) {
     user: { id: user.id, username: user.username },
   });
 }
+
+export async function PUT(req: NextRequest) {
+  const userData = await req.json();
+
+  const user = await prisma.user.update({
+    where: { id: userData.id },
+    data: userData,
+  });
+
+  return NextResponse.json({
+    message: "Usuário atualizado com sucesso",
+    user: user,
+    ok: true,
+  });
+}

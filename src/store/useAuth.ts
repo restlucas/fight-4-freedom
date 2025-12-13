@@ -1,11 +1,13 @@
 import { create } from "zustand";
 import Cookies from "js-cookie";
+import { User } from "../lib/types";
 
 interface AuthStore {
   user: any | null;
   isAdmin: boolean;
   initialized: boolean;
   getUser: () => any | null;
+  updateUser: (user: User) => void;
   login: (user: any, token: string) => void;
   logout: () => void;
   init: () => void;
@@ -19,6 +21,11 @@ export const useAuth = create<AuthStore>((set) => ({
   getUser: () => {
     const user = localStorage.getItem("@f4f-client/user");
     return user ? JSON.parse(user) : null;
+  },
+
+  updateUser: (user: User) => {
+    localStorage.setItem("@f4f-client/user", JSON.stringify(user));
+    set({ user: user });
   },
 
   login: (user, token) => {

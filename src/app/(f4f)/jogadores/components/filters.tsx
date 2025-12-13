@@ -38,7 +38,7 @@ export function PlayerFilters({
 }: Props) {
   return (
     <div className="flex items-center justify-start gap-4 flex-wrap">
-      <div className="relative min-w-96">
+      <div className="relative w-full md:max-w-96">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" />
 
         <Input

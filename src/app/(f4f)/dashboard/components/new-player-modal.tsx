@@ -31,7 +31,6 @@ import {
   SelectContent,
   SelectItem,
 } from "@/src/components/ui/select";
-import { User } from "@/src/lib/types";
 import { useEffect, useMemo, useState } from "react";
 import { inviteUser } from "@/src/services/user.service";
 import { Check, Copy, Loader2 } from "lucide-react";
@@ -137,6 +136,7 @@ export function NewPlayerModal({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
+        <DialogTitle />
         {step === "SUCCESS" && (
           <>
             <DialogHeader>

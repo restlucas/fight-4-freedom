@@ -17,6 +17,7 @@ import { LoginDialog } from "@/src/components/login-dialog";
 import { cn } from "@/src/lib/utils";
 import { useAuth } from "@/src/store/useAuth";
 import { UserAvatarPopover } from "./user-avatar-popover";
+import { useState } from "react";
 
 const navItems = [
   { href: "/", label: "HOME", icon: Target },
@@ -29,6 +30,8 @@ export function Navigation() {
 
   const { user, isAdmin, initialized } = useAuth();
   const isLoggedIn = !!user;
+
+  const [sheetOpen, setSheetOpen] = useState(false);
 
   if (!initialized) {
     return null;
@@ -93,20 +96,21 @@ export function Navigation() {
         </nav>
 
         {/* Mobile Navigation */}
-        <Sheet>
+        <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
           <SheetTrigger asChild className="md:hidden">
             <Button variant="ghost" size="icon">
               <Menu className="h-6 w-6" />
             </Button>
           </SheetTrigger>
           <SheetContent side="right">
-            <nav className="flex flex-col gap-4 mt-8">
+            <nav className="flex flex-col gap-4 mt-12">
               {navItems.map((item) => {
                 const Icon = item.icon;
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
+                    onClick={() => setSheetOpen(false)}
                     className={cn(
                       "flex items-center gap-3 px-4 py-3 text-base font-semibold transition-colors hover:text-primary rounded-md",
                       pathname === item.href
@@ -120,32 +124,36 @@ export function Navigation() {
                 );
               })}
 
-              <div className="mt-4 pt-4 border-t border-border/40">
+              <div className="mt-4 pt-4 border-t border-border/40 flex flex-col flex-1 h-full">
                 {isLoggedIn ? (
                   <>
                     {isAdmin && (
                       <Link
                         href="/dashboard"
-                        className="text-base items-center gap-3 px-4 py-3 font-semibold text-muted-foreground hover:text-primary rounded-md"
+                        className="text-base flex items-center gap-3 px-4 py-3 font-semibold text-muted-foreground hover:text-primary rounded-md"
+                        onClick={() => setSheetOpen(false)}
                       >
                         <LayoutDashboard className="h-5 w-5" />
                         Dashboard
                       </Link>
                     )}
+
                     <Link
                       href="/perfil"
                       className="flex items-center gap-3 px-4 py-3 text-base font-semibold text-muted-foreground hover:text-primary rounded-md"
+                      onClick={() => setSheetOpen(false)}
                     >
                       <User className="h-5 w-5" />
                       {user?.name}
                     </Link>
-                    <Button variant="ghost" className="w-full mt-2">
+
+                    <Button variant="ghost" className="w-full mt-auto">
                       Sair
                     </Button>
                   </>
                 ) : (
                   <LoginDialog>
-                    <Button variant="default" className="w-full gap-2">
+                    <Button variant="default" className="w-full gap-2 mt-auto">
                       <LogIn className="h-4 w-4" />
                       LOGIN
                     </Button>

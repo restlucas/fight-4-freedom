@@ -59,6 +59,7 @@ export function LoginDialog({ children }: LoginDialogProps) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-md">
+        <DialogTitle />
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <LogIn className="h-5 w-5 text-primary" />

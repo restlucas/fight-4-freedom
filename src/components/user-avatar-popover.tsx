@@ -12,6 +12,7 @@ import {
 } from "./ui/dropdown-menu";
 import Link from "next/link";
 import { useAuth } from "@/src/store/useAuth";
+import { getInitials } from "../utils/string";
 
 export const UserAvatarPopover = ({ user }: { user: User }) => {
   const { logout } = useAuth();
@@ -21,7 +22,7 @@ export const UserAvatarPopover = ({ user }: { user: User }) => {
       <DropdownMenuTrigger>
         <Avatar>
           <AvatarImage src={user.avatar} alt={user.name} />
-          <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+          <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent>

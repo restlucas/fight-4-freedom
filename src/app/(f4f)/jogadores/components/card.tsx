@@ -5,6 +5,9 @@ import { Badge } from "@/src/components/ui/badge";
 import { medals, ranks } from "@/src/lib/mock-data";
 import { PlayerStats } from "./stats";
 import { Medal } from "@/src/lib/types";
+import { PlayerMedals } from "./medals";
+import { Avatar, AvatarFallback } from "@/src/components/ui/avatar";
+import { getInitials } from "@/src/utils/string";
 
 export function PlayerCard({ player, top }: any) {
   const playerRank =
@@ -17,17 +20,26 @@ export function PlayerCard({ player, top }: any) {
 
   return (
     <Link href={`/jogadores/${player.username}`}>
-      <Card className="p-4 hover:border-primary transition-all group overflow-hidden relative">
-        <div className="flex items-start justify-center gap-6">
+      {/* Desktop View - Min 1024px*/}
+      <Card className="p-4 hover:border-primary transition-all group overflow-hidden relative hidden lg:flex">
+        <div className="flex flex-wrap items-start justify-between gap-6">
           <div className="flex items-center gap-2 flex-col">
             <div className="w-32 h-32 rounded-lg overflow-hidden border-2 border-primary/30 bg-primary/5">
-              <Image
-                src={player.avatar || "/images/tatical-military.jpg"}
-                alt={player.name}
-                width={128}
-                height={128}
-                className="h-full w-full object-cover"
-              />
+              {player.avatar ? (
+                <Image
+                  src={player.avatar}
+                  alt={player.name}
+                  width={128}
+                  height={128}
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <Avatar className="w-full h-full rounded-none">
+                  <AvatarFallback className="text-5xl font-bold rounded-none">
+                    {getInitials(player.name)}
+                  </AvatarFallback>
+                </Avatar>
+              )}
             </div>
             <Badge variant="outline" className="h-6 px-3 shrink-0 text-xs">
               {player.platform}
@@ -88,6 +100,61 @@ export function PlayerCard({ player, top }: any) {
             <PlayerStats player={player} top={top} />
           </div>
         </div>
+      </Card>
+
+      {/* Mobile View - Max 1023px*/}
+      <Card className="p-4 hover:border-primary transition-all group overflow-hidden relative flex lg:hidden">
+        <div className="flex items-center gap-2">
+          <div className="w-28 h-28 rounded-lg overflow-hidden border-2 border-primary/30 bg-primary/5">
+            {player.avatar ? (
+              <Image
+                src={player.avatar}
+                alt={player.name}
+                width={128}
+                height={128}
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <Avatar className="w-full h-full rounded-none">
+                <AvatarFallback className="text-5xl font-bold rounded-none">
+                  {getInitials(player.name)}
+                </AvatarFallback>
+              </Avatar>
+            )}
+          </div>
+
+          <div className="flex flex-1 h-28 flex-col gap-1 relative">
+            <h3 className="text-xl font-bold group-hover:text-primary transition-colors truncate">
+              {player.name}
+            </h3>
+
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-xs text-muted-foreground">
+                {player.ea_id}
+              </span>
+              <Badge variant="outline" className="h-6 px-3 shrink-0 text-xs">
+                {player.platform}
+              </Badge>
+            </div>
+
+            {player.bio && (
+              <p className="mt-4 mb-2 line-clamp-4 text-sm">{player.bio}</p>
+            )}
+
+            <Image
+              title={playerRank.name}
+              src={playerRank.src}
+              alt={playerRank.name}
+              width={30}
+              height={30}
+              className="w-8 h-8 absolute top-0 right-0"
+            />
+          </div>
+        </div>
+
+        <PlayerStats player={player} top={top} />
+
+        <PlayerMedals player={player} />
       </Card>
     </Link>
   );

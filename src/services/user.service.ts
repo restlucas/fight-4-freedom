@@ -17,6 +17,12 @@ type RegisterUserPayload = {
   confirm_password: string;
 };
 
+type UpdateUserPayload = {
+  id: string;
+  ea_id: string;
+  bio?: string;
+};
+
 export const inviteUser = async (payload: InviteUserPayload) => {
   const { data } = await api.post("/users/invite", payload);
   return data;
@@ -29,5 +35,10 @@ export const fetchUser = async (username: string) => {
 
 export const registerUser = async (payload: RegisterUserPayload) => {
   const { data } = await api.post("/auth/register", payload);
+  return data;
+};
+
+export const updateUser = async (payload: UpdateUserPayload) => {
+  const { data } = await api.put("/users", payload);
   return data;
 };
