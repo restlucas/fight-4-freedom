@@ -8,8 +8,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/src/components/ui/select";
+import { Platform } from "@/src/lib/enums";
 import { Search } from "lucide-react";
-import { Platform } from "@/src/lib/types";
 
 type SortOption =
   | "kd"
