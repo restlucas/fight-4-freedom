@@ -171,8 +171,14 @@ export function MedalsTab() {
 function MedalSkeleton() {
   return (
     <Card className="p-4 border-border">
-      <div className="flex items-center gap-3">
-        <Skeleton className="h-10 w-10" />
+      <div className="flex items-start gap-4 py-2">
+        <Skeleton className="w-24 h-24 object-cover" />
+
+        <div className="flex-1 min-w-0">
+          <div className="flex items-start justify-between gap-2 mb-2">
+            <Skeleton className="h-7 w-24" />
+          </div>
+        </div>
       </div>
     </Card>
   );

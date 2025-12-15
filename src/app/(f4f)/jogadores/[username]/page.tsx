@@ -27,6 +27,7 @@ import { Medal, User } from "@/src/lib/types";
 import { getInitials } from "@/src/utils/string";
 import { usersService } from "@/src/services/user.service";
 import { MedalCard } from "@/src/components/medal-card";
+import { Skeleton } from "@/src/components/ui/skeleton";
 
 export default function PlayerPage() {
   const params = useParams();
@@ -56,7 +57,7 @@ export default function PlayerPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <Button variant="ghost" asChild className="mb-6">
+      <Button variant="ghost" asChild className="mb-6 hover:text-white">
         <Link href="/jogadores">
           <ArrowLeft className="h-4 w-4 mr-2" />
           Voltar para Jogadores
@@ -289,61 +290,65 @@ const StatCard = ({
 
 const PlayerSkeleton = () => {
   return (
-    <div className="container mx-auto px-4 py-8 space-y-8">
+    <div className="container mx-auto px-4 py-8 space-y-4">
       {/* Botão de Voltar */}
-      <div className="h-10 w-40 bg-muted/50 rounded-lg animate-pulse mb-6"></div>
+      <Skeleton className="h-10 w-40 rounded-lg mb-6" />
 
       {/* Header do Jogador */}
-      <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
-        {/* Avatar */}
-        <div className="shrink-0">
-          <div className="w-32 h-32 md:w-40 md:h-40 rounded-lg bg-muted/50 animate-pulse"></div>
-        </div>
+      <Card className="p-8 mb-8 border-border">
+        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
+          {/* Avatar */}
+          <div className="shrink-0">
+            <div className="w-32 h-32 md:w-40 md:h-40 rounded-lg bg-muted/50 animate-pulse"></div>
+          </div>
 
-        {/* Info */}
-        <div className="flex-1 space-y-4">
-          <div className="h-8 w-1/3 bg-muted/50 rounded animate-pulse"></div>
-          <div className="h-6 w-1/4 bg-muted/50 rounded animate-pulse"></div>
-          <div className="space-y-2 mt-2">
-            <div className="h-4 w-1/2 bg-muted/50 rounded animate-pulse"></div>
-            <div className="h-4 w-1/3 bg-muted/50 rounded animate-pulse"></div>
+          {/* Info */}
+          <div className="flex-1 space-y-4">
+            <div className="h-8 w-1/3 bg-muted/50 rounded animate-pulse"></div>
+            <div className="h-6 w-1/4 bg-muted/50 rounded animate-pulse"></div>
+            <div className="space-y-2 mt-2">
+              <div className="h-4 w-1/2 bg-muted/50 rounded animate-pulse"></div>
+              <div className="h-4 w-1/3 bg-muted/50 rounded animate-pulse"></div>
+            </div>
+          </div>
+
+          {/* Patente */}
+          <div className="bg-secondary/50 rounded-lg p-4 min-w-[100px] flex items-center justify-center gap-4 flex-col">
+            <div className="w-20 h-20 bg-muted/50 rounded animate-pulse"></div>
+            <div className="h-6 w-16 bg-muted/50 rounded animate-pulse"></div>
           </div>
         </div>
-
-        {/* Patente */}
-        <div className="bg-secondary/50 rounded-lg p-4 min-w-[100px] flex items-center justify-center gap-4 flex-col">
-          <div className="w-20 h-20 bg-muted/50 rounded animate-pulse"></div>
-          <div className="h-6 w-16 bg-muted/50 rounded animate-pulse"></div>
-        </div>
-      </div>
+      </Card>
 
       {/* Estatísticas de Combate */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {Array.from({ length: 8 }).map((_, i) => (
-          <div
-            key={i}
-            className="p-4 border-border rounded-lg space-y-2 animate-pulse bg-muted/20"
-          >
-            <div className="h-6 w-6 bg-muted/50 rounded"></div>
-            <div className="h-8 w-16 bg-muted/50 rounded mt-2"></div>
-            <div className="h-4 w-20 bg-muted/50 rounded"></div>
-          </div>
+          <Card className="p-4 border-border gap-2" key={i}>
+            <Skeleton className="h-6 w-6 bg-muted/50 rounded" />
+            <Skeleton className="h-8 w-16 bg-muted/50 rounded mt-2" />
+            <Skeleton className="h-4 w-20 bg-muted/50 rounded" />
+          </Card>
         ))}
       </div>
 
       {/* Estatísticas Adicionais */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {Array.from({ length: 2 }).map((_, i) => (
-          <div
-            key={i}
-            className="p-4 border-border rounded-lg space-y-4 animate-pulse bg-muted/20"
-          >
-            <div className="h-6 w-1/3 bg-muted/50 rounded"></div>
+          <Card className="p-4 border-border gap-2">
+            <Skeleton className="h-6 w-28 bg-muted/50 rounded" />
+
             <div className="space-y-2">
-              <div className="h-4 w-full bg-muted/50 rounded"></div>
-              <div className="h-4 w-3/4 bg-muted/50 rounded"></div>
+              <div className="flex items-center justify-between">
+                <Skeleton className="h-5 w-28" />
+                <Skeleton className="h-8 w-20" />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <Skeleton className="h-5 w-36" />
+                <Skeleton className="h-8 w-20" />
+              </div>
             </div>
-          </div>
+          </Card>
         ))}
       </div>
     </div>
