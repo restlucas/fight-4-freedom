@@ -81,9 +81,7 @@ export function PlayerCard({ player, top }: any) {
                 )}
               </div>
 
-              <div className="mt-auto">
-                <PlayerMedals player={player} />
-              </div>
+              <PlayerMedals player={player} />
             </div>
 
             <PlayerStats player={player} top={top} />
