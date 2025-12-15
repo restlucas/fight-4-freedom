@@ -3,9 +3,9 @@ import { prisma } from "@/src/lib/prisma";
 
 export async function GET(
   req: Request,
-  context: { params: { username: string } }
+  context: { params: Promise<{ username: string }> }
 ) {
-  const { username } = context.params;
+  const { username } = await context.params;
 
   try {
     const user = await prisma.user.findFirst({
@@ -36,9 +36,12 @@ export async function GET(
   }
 }
 
-export async function DELETE(context: {
-  params: Promise<{ username: string }>;
-}) {
+export async function DELETE(
+  req: Request,
+  context: {
+    params: Promise<{ username: string }>;
+  }
+) {
   const { username } = await context.params;
 
   const user = await prisma.user.delete({
