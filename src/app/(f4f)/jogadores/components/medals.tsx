@@ -3,9 +3,7 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/src/components/ui/avatar";
-import { medals } from "@/src/lib/mock-data";
-import { Medal, User } from "@/src/lib/types";
-import { getRandomMedals } from "@/src/utils/get-random-medals";
+import { User } from "@/src/lib/types";
 
 interface PlayerMedalsProps {
   player: User;
