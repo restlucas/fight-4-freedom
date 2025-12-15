@@ -41,8 +41,8 @@ export function PlayerCard({ player, top }: any) {
             </Badge>
           </div>
 
-          <div className="flex-1 min-w-0 h-full">
-            <div className="flex items-start justify-between gap-4 mb-2">
+          <div className="flex-1 flex flex-col min-w-0">
+            <div className="h-full flex items-start justify-between gap-4 mb-2">
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-4">
                   <h3 className="text-3xl font-bold group-hover:text-primary transition-colors truncate">
@@ -72,12 +72,18 @@ export function PlayerCard({ player, top }: any) {
                   />
                 </div>
 
-                {player.bio && (
+                {player.bio ? (
                   <p className="mt-4 mb-2 line-clamp-4">{player.bio}</p>
+                ) : (
+                  <p className="mt-4 mb-2 line-clamp-4 text-muted-foreground italic">
+                    Nenhuma bio encontrada
+                  </p>
                 )}
               </div>
 
-              <PlayerMedals player={player} />
+              <div className="mt-auto">
+                <PlayerMedals player={player} />
+              </div>
             </div>
 
             <PlayerStats player={player} top={top} />
