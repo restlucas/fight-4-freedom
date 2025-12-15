@@ -2,6 +2,10 @@ import { Rarity } from "@/src/lib/enums";
 
 export type MedalsFilters = {
   name?: string;
+  page?: number;
+  size?: number;
+  assignee?: string;
+  assigned?: boolean;
   rarity?: Rarity | "all";
 };
 

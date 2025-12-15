@@ -1,5 +1,5 @@
 import { Button } from "@/src/components/ui/button";
-import { Card, CardAction } from "@/src/components/ui/card";
+import { Card } from "@/src/components/ui/card";
 import {
   BanIcon,
   CheckIcon,
@@ -35,6 +35,7 @@ import { Skeleton } from "@/src/components/ui/skeleton";
 import { PlayerModal } from "./modal";
 import { DeletePlayerModal } from "./modal-delete";
 import { InviteLink } from "./modal-invite";
+import { AssignMedalsDialog } from "../medals/modal-assignee";
 
 const getPlayerStatus = (status: Status) => {
   switch (status) {
@@ -192,11 +193,7 @@ export function UsersTab() {
                         {userRole}
                       </TableCell>
                       <TableCell>
-                        {/* <AssignMedalsDialog
-                                playerId={player.id.toString()}
-                                playerName={player.name}
-                                currentMedals={player.medals}
-                              /> */}
+                        <AssignMedalsDialog player={player} />
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-2">

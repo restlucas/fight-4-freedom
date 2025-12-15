@@ -9,19 +9,47 @@ export async function GET(request: Request) {
 
     const name = searchParams.get("name");
     const rariry = searchParams.get("rarity");
+    const assignee = searchParams.get("assignee");
+    const assigned = searchParams.get("assigned");
+    const page = searchParams.get("page");
+    const size = searchParams.get("size");
 
-    const users = await prisma.medal.findMany({
+    const medals = await prisma.medal.findMany({
       include: { userMedals: true },
       where: {
         ...(name &&
-          name !== "" && {
-            name: { contains: name },
+          name.trim() !== "" && {
+            name: {
+              contains: name,
+              mode: "insensitive",
+            },
           }),
         ...(rariry && rariry !== "all" && { rarity: rariry as Rarity }),
+        ...(assignee &&
+          assigned === "true" && {
+            userMedals: {
+              some: {
+                user_id: assignee,
+              },
+            },
+          }),
+        ...(assignee &&
+          assigned === "false" && {
+            userMedals: {
+              none: {
+                user_id: assignee,
+              },
+            },
+          }),
       },
+      ...(page &&
+        size && {
+          skip: (parseInt(page) - 1) * parseInt(size),
+          take: parseInt(size),
+        }),
     });
 
-    return NextResponse.json(users);
+    return NextResponse.json(medals);
   } catch (error) {
     return NextResponse.json(
       {
