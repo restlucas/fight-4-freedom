@@ -24,9 +24,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/src/components/ui/form";
-import { updateUser } from "@/src/services/user.service";
 import { alertToast } from "@/src/lib/alert-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useUsersMutations } from "@/src/queries/users/useUsersMutations";
 
 const formSchema = z.object({
   id: z.string(),
@@ -37,6 +37,7 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 function PerfilContent({ user }: { user: User }) {
+  const { updateUser } = useUsersMutations();
   const { name, bio, avatar, platform, ea_id, createdAt } = user;
 
   const { updateUser: updateUserStore } = useAuth();
@@ -55,7 +56,7 @@ function PerfilContent({ user }: { user: User }) {
     setSubmiting(true);
 
     try {
-      const response = await updateUser(data);
+      const response = await updateUser.mutateAsync(data);
       updateUserStore(response.user);
       alertToast.success("Perfil atualizado com sucesso");
     } catch (error) {

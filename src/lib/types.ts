@@ -1,4 +1,4 @@
-import { Platform, Status } from "./enums";
+import { Platform, Rarity, Status } from "./enums";
 
 export type User = {
   id: string;
@@ -12,9 +12,13 @@ export type User = {
   bio: string;
   rank: string;
   platform?: Platform;
-  ea_id?: string;
+  ea_id: string;
   trackergg_link?: string;
-  medals: string[];
+  userMedals: {
+    medal: Medal;
+    createdAt: string;
+    updatedAt: string;
+  }[];
   stats: PlayerStats | null;
   status: Status;
 };
@@ -30,9 +34,9 @@ export interface Medal {
   id: string;
   name: string;
   description: string;
-  criteria: string;
+  image?: string;
   icon: string;
-  rarity: "comum" | "raro" | "epico" | "lendario";
+  rarity: Rarity;
 }
 
 export interface PlayerStats {

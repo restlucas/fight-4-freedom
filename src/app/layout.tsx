@@ -18,9 +18,9 @@ const robotoMono = Roboto_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "BF6 Elite Squad | Clã Battlefield 6",
+  title: "Fight 4 Freedom | BF6",
   description:
-    "Clã profissional de Battlefield 6. Junte-se aos melhores operadores táticos.",
+    "Comunidade de jogadores de Battlefield 6. Junte-se aos melhores operadores táticos.",
   generator: "v0.app",
   icons: {
     icon: [

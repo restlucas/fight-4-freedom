@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { prisma } from "@/src/lib/prisma";
 
 export async function GET(
-  req: NextRequest,
+  req: Request,
   context: { params: Promise<{ username: string }> }
 ) {
   const { username } = await context.params;
@@ -10,7 +10,13 @@ export async function GET(
   try {
     const user = await prisma.user.findFirst({
       where: { username },
-      include: { medals: true },
+      include: {
+        userMedals: {
+          include: {
+            medal: true,
+          },
+        },
+      },
     });
 
     if (!user) {
@@ -28,4 +34,20 @@ export async function GET(
       { status: 500 }
     );
   }
+}
+
+export async function DELETE(context: {
+  params: Promise<{ username: string }>;
+}) {
+  const { username } = await context.params;
+
+  const user = await prisma.user.delete({
+    where: { username },
+  });
+
+  return NextResponse.json({
+    message: "Usuário deletado com sucesso",
+    user: user,
+    ok: true,
+  });
 }

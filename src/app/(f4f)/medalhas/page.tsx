@@ -1,52 +1,77 @@
 "use client";
 
-import { useState } from "react";
-import { medals } from "@/src/lib/mock-data";
+import { useMemo, useState } from "react";
 import { Card } from "@/src/components/ui/card";
 import { Badge } from "@/src/components/ui/badge";
 import { Trophy, Target, Award, Crown } from "lucide-react";
+import { useMedalsInfinite } from "@/src/queries/medals/useMedalsInfinite";
+import { Skeleton } from "@/src/components/ui/skeleton";
+import { getMedalColor, getMedalRarity } from "@/src/utils/medals";
+import { Button } from "@/src/components/ui/button";
+import { Rarity } from "@/src/lib/enums";
+import { MedalCard } from "@/src/components/medal-card";
 
-type Rarity = "todas" | "lendario" | "epico" | "raro" | "comum";
+const medalRarityFiltersConfig = [
+  {
+    label: "Todas",
+    value: "all",
+  },
+  {
+    label: "Comuns",
+    value: "COMMON",
+  },
+  {
+    label: "Raras",
+    value: "RARE",
+  },
+  {
+    label: "Epicas",
+    value: "EPIC",
+  },
+  {
+    label: "Lendárias",
+    value: "LEGENDARY",
+  },
+  {
+    label: "Únicas",
+    value: "UNIQUE",
+  },
+];
 
 export default function MedalhasPage() {
-  const [selectedRarity, setSelectedRarity] = useState<Rarity>("todas");
+  const [filters, setFilters] = useState<{
+    rarity?: Rarity | "all";
+  }>({
+    rarity: "all",
+  });
 
-  const filteredMedals = medals.filter(
-    (medal) => selectedRarity === "todas" || medal.rarity === selectedRarity
-  );
+  const {
+    data,
+    isLoading,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useMedalsInfinite({ filters });
 
-  const rarityColors = {
-    lendario: {
-      bg: "bg-chart-4/20 border-chart-4",
-      text: "text-chart-4",
-      icon: "🏆",
-    },
-    epico: {
-      bg: "bg-chart-3/20 border-chart-3",
-      text: "text-chart-3",
-      icon: "💎",
-    },
-    raro: {
-      bg: "bg-chart-2/20 border-chart-2",
-      text: "text-chart-2",
-      icon: "⭐",
-    },
-    comum: {
-      bg: "bg-muted/50 border-muted-foreground/30",
-      text: "text-muted-foreground",
-      icon: "🎖️",
-    },
-  };
+  const medals = data?.pages.flatMap((page) => page) ?? [];
 
-  const getMedalStats = (medalId: string) => {
+  const medalsStats = useMemo(() => {
+    if (!medals)
+      return { total: 0, unique: 0, legendary: 0, epic: 0, rare: 0, common: 0 };
+
     return {
-      count: 0,
-      percentage: 0,
+      total: medals.length,
+      unique: medals.filter((m) => m.rarity === "UNIQUE").length,
+      legendary: medals.filter((m) => m.rarity === "LEGENDARY").length,
+      epic: medals.filter((m) => m.rarity === "EPIC").length,
+      rare: medals.filter((m) => m.rarity === "RARE").length,
+      common: medals.filter((m) => m.rarity === "COMMON").length,
     };
-  };
+  }, [medals]);
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 space-y-8">
       <div className="mb-8">
         <h1 className="text-5xl md:text-5xl font-bold mb-4">
           SISTEMA DE <span className="text-primary">MEDALHAS</span>
@@ -57,101 +82,39 @@ export default function MedalhasPage() {
         </p>
       </div>
 
-      {/* Estatísticas Gerais */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        <Card className="p-4 border-border gap-3">
-          <div className="flex items-center justify-between mb-2">
-            <Trophy className="h-8 w-8 text-primary" />
-            <div className="text-4xl font-bold">{medals.length}</div>
-          </div>
-          <div className="text-lg">Total de Medalhas</div>
-        </Card>
-
-        <Card className="p-4 border-border gap-3">
-          <div className="flex items-center justify-between mb-2">
-            <Crown className="h-8 w-8 text-chart-4" />
-            <div className="text-4xl font-bold">
-              {medals.filter((m) => m.rarity === "lendario").length}
-            </div>
-          </div>
-          <div className="text-lg">Lendárias</div>
-        </Card>
-
-        <Card className="p-4 border-border gap-3">
-          <div className="flex items-center justify-between mb-2">
-            <Award className="h-8 w-8 text-chart-3" />
-            <div className="text-4xl font-bold">
-              {medals.filter((m) => m.rarity === "epico").length}
-            </div>
-          </div>
-          <div className="text-lg">Épicas</div>
-        </Card>
-
-        <Card className="p-4 border-border gap-3">
-          <div className="flex items-center justify-between mb-2">
-            <Target className="h-8 w-8 text-chart-2" />
-            <div className="text-4xl font-bold">
-              {medals.filter((m) => m.rarity === "epico").length}
-            </div>
-          </div>
-          <div className="text-lg">Raras</div>
-        </Card>
+      {/* Filtro por rarida */}
+      <div className="flex items-center flex-wrap gap-4">
+        {medalRarityFiltersConfig.map((filter) => (
+          <Button
+            variant={filters.rarity === filter.value ? "default" : "outline"}
+            onClick={() =>
+              setFilters({ rarity: filter.value as Rarity | "all" })
+            }
+          >
+            {filter.label}
+          </Button>
+        ))}
       </div>
 
       {/* Filtro por Raridade */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredMedals.map((medal) => {
-          const stats = getMedalStats(medal.id);
-          return (
-            <Card
-              key={medal.id}
-              className={`p-4 border ${rarityColors[medal.rarity].bg} gap-4`}
-            >
-              <div className="flex items-start gap-4">
-                <div className="text-5xl">{medal.icon}</div>
-                <div className="flex-1">
-                  <div className="flex items-start justify-between mb-2">
-                    <h3 className="font-bold text-lg">{medal.name}</h3>
-                    <Badge className="capitalize ml-2 text-white">
-                      {medal.rarity}
-                    </Badge>
-                  </div>
-                  <p className="text-sm mb-1">{medal.description}</p>
-                </div>
-              </div>
-
-              <Card className="p-4 bg-background/50 border-border gap-2">
-                <div className="mb-1 font-semibold">CRITÉRIOS PARA OBTER:</div>
-                <p>{medal.criteria}</p>
-              </Card>
-
-              <div className="flex items-center justify-between mt-auto">
-                <div className="flex items-center gap-2">
-                  <Trophy className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-lg">Conquistada por:</span>
-                </div>
-                <div className="text-right">
-                  <div className="font-bold">
-                    {stats.count} jogador{stats.count !== 1 ? "es" : ""}
-                  </div>
-                  <div className="text-lg">{stats.percentage}% do clã</div>
-                </div>
-              </div>
-            </Card>
-          );
-        })}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {isLoading ? (
+          Array.from({ length: 10 }).map((_, index) => (
+            <MedalSkeleton key={index} />
+          ))
+        ) : medals.length === 0 ? (
+          <div className="text-center py-6 w-full col-span-full">
+            Nenhuma medalha encontrada
+          </div>
+        ) : (
+          medals.map((medal) => {
+            return <MedalCard key={medal.id} medal={medal} />;
+          })
+        )}
       </div>
 
-      {filteredMedals.length === 0 && (
-        <Card className="p-12 text-center border-border">
-          <p className="text-muted-foreground">
-            Nenhuma medalha encontrada nesta categoria.
-          </p>
-        </Card>
-      )}
-
       {/* Informações Adicionais */}
-      <Card className="p-8 border-border bg-card/50 mt-12">
+      <Card className="p-8 border-border bg-card/50">
         <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
           <Award className="h-6 w-6 text-primary" />
           Como Funciona o Sistema de Medalhas
@@ -167,5 +130,20 @@ export default function MedalhasPage() {
         </div>
       </Card>
     </div>
+  );
+}
+
+function MedalSkeleton() {
+  return (
+    <Card className="p-4 border-border gap-3 relative h-[348px] w-full">
+      <Skeleton className="absolute top-4 right-4 w-[70px] h-[22px] rounded-xl" />
+
+      <div className="w-full flex flex-col items-center justify-center gap-4">
+        <Skeleton className="w-32 h-32 rounded-full" />
+        <Skeleton className="h-6 w-[100px] rounded-xl" />
+      </div>
+
+      <Skeleton className="w-full h-[78px] rounded-xl" />
+    </Card>
   );
 }

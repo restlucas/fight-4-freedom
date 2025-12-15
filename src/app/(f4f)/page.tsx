@@ -42,8 +42,8 @@ export default function HomePage() {
             <div className="flex flex-col sm:flex-row gap-4">
               <Button size="lg" className="gap-2" asChild>
                 <Link href="/jogadores">
-                  <Users className="h-5 w-5" />
-                  <span className="text-lg">Ver Jogadores</span>
+                  <Users className="h-5 w-5 text-white" />
+                  <span className="text-lg text-white">Ver Jogadores</span>
                 </Link>
               </Button>
 

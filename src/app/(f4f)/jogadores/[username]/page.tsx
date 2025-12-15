@@ -3,7 +3,7 @@
 import { notFound, useParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { medals, ranks } from "@/src/lib/mock-data";
+import { ranks } from "@/src/lib/mock-data";
 import { Card } from "@/src/components/ui/card";
 import { Badge } from "@/src/components/ui/badge";
 import { Button } from "@/src/components/ui/button";
@@ -17,15 +17,16 @@ import {
   Percent,
   Award,
 } from "lucide-react";
-import { fetchUser } from "@/src/services/user.service";
 import { useQuery } from "@tanstack/react-query";
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
 } from "@/src/components/ui/avatar";
-import { User } from "@/src/lib/types";
+import { Medal, User } from "@/src/lib/types";
 import { getInitials } from "@/src/utils/string";
+import { usersService } from "@/src/services/user.service";
+import { MedalCard } from "@/src/components/medal-card";
 
 export default function PlayerPage() {
   const params = useParams();
@@ -37,7 +38,7 @@ export default function PlayerPage() {
     error,
   } = useQuery<User>({
     queryKey: ["player", username],
-    queryFn: () => fetchUser(username as string),
+    queryFn: () => usersService.fetchByUsername(username as string),
     enabled: !!username,
   });
 
@@ -47,18 +48,11 @@ export default function PlayerPage() {
     notFound();
   }
 
-  const playerMedals = medals.filter((m) => player.medals.includes(m.id));
-
-  const rarityColors = {
-    lendario: "bg-chart-4/20 border-chart-4 text-chart-4",
-    epico: "bg-chart-3/20 border-chart-3 text-chart-3",
-    raro: "bg-chart-2/20 border-chart-2 text-chart-2",
-    comum: "bg-muted/50 border-muted-foreground/30 ",
-  };
-
   const playerRank =
     ranks.find((rank) => rank.id === player.rank) ||
     ranks.find((rank) => rank.id === "recruta")!;
+
+  const playerMedals = player.userMedals.map((medal: any) => medal.medal);
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -257,30 +251,9 @@ export default function PlayerPage() {
         </h2>
 
         {playerMedals.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {playerMedals.map((medal) => (
-              <Card
-                key={medal.id}
-                className={`p-6 border ${
-                  rarityColors[
-                    medal.rarity as "lendario" | "epico" | "raro" | "comum"
-                  ]
-                }`}
-              >
-                <div className="flex items-start gap-4">
-                  <div className="text-4xl">{medal.icon}</div>
-                  <div className="flex-1">
-                    <div className="flex items-start justify-between mb-2">
-                      <h3 className="font-bold">{medal.name}</h3>
-                      <Badge variant="outline" className="capitalize text-xs">
-                        {medal.rarity}
-                      </Badge>
-                    </div>
-                    <p className="text-lg mb-2">{medal.description}</p>
-                    <p className="text-xs ">{medal.criteria}</p>
-                  </div>
-                </div>
-              </Card>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {playerMedals.map((medal: Medal) => (
+              <MedalCard key={medal.id} medal={medal} />
             ))}
           </div>
         ) : (

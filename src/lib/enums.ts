@@ -14,3 +14,5 @@ export type Rank =
   | "GENERAL";
 
 export type Role = "ADMIN" | "USER";
+
+export type Rarity = "COMMON" | "RARE" | "EPIC" | "LEGENDARY" | "UNIQUE";

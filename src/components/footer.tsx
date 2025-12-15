@@ -62,7 +62,7 @@ export function Footer() {
           </div>
         </div>
         <div className="mt-8 pt-6 border-t border-border text-center">
-          <p>© 2025 BF6 Elite Squad. Todos os direitos reservados.</p>
+          <p>© 2025 Fight 4 Freedom. Todos os direitos reservados.</p>
         </div>
 
         <div className="mt-2 text-center text-muted-foreground">

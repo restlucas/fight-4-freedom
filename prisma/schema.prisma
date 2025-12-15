@@ -3,7 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  // provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -22,8 +23,29 @@ model User {
   stats          Json?
   status         Status   @default(PENDING)
   createdAt      DateTime @default(now())
-  invite         Invite[]
-  medals         Medal[]
+  
+  userInvites         Invite[]
+  userMedals         UserMedal[]
+}
+
+model Medal {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  rarity      Rarity   @default(COMMON)
+  image       String?
+  createdAt   DateTime @default(now())
+
+  userMedals UserMedal[]
+}
+
+model UserMedal {
+  id        String   @id @default(uuid())
+  user_id   String
+  medal_id  String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  medal     Medal    @relation(fields: [medal_id], references: [id], onDelete: Cascade)
 }
 
 model Invite {
@@ -34,18 +56,8 @@ model Invite {
   used      Boolean   @default(false)
   createdAt DateTime  @default(now())
   usedAt    DateTime?
-  user      User      @relation(fields: [user_id], references: [id])
-}
-
-model Medal {
-  id          String   @id @default(uuid())
-  name        String
-  description String
-  rarity      String
-  criteria    String
-  createdAt   DateTime @default(now())
-  user_id     String?
-  User        User?    @relation(fields: [user_id], references: [id])
+  
+  user      User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 enum Platform {
@@ -76,4 +88,12 @@ enum Status {
   INACTIVE
   PENDING
   BANNED
+}
+
+enum Rarity {
+  COMMON
+  RARE
+  EPIC
+  LEGENDARY
+  UNIQUE
 }

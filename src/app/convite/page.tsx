@@ -8,7 +8,6 @@ import {
   CardHeader,
 } from "@/src/components/ui/card";
 import { Loader2, Target } from "lucide-react";
-import { validateInvite } from "@/src/services/invite.service";
 import { useEffect, useRef, useState } from "react";
 import { alertToast } from "@/src/lib/alert-toast";
 import z from "zod";
@@ -24,9 +23,11 @@ import {
 } from "@/src/components/ui/form";
 import { Input } from "@/src/components/ui/input";
 import { Button } from "@/src/components/ui/button";
-import { registerUser } from "@/src/services/user.service";
 import { authenticate } from "@/src/services/auth.service";
 import { useAuth } from "@/src/store/useAuth";
+import { usersService } from "@/src/services/user.service";
+import { useUsersMutations } from "@/src/queries/users/useUsersMutations";
+import { inviteService } from "@/src/services/invite.service";
 
 const formSchema = z
   .object({
@@ -45,6 +46,8 @@ const formSchema = z
 type FormData = z.infer<typeof formSchema>;
 
 export default function InvitePage() {
+  const { registerUser } = useUsersMutations();
+
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
@@ -71,19 +74,12 @@ export default function InvitePage() {
     setSubmiting(true);
 
     try {
-      await registerUser(data);
+      await registerUser.mutateAsync(data);
       const authData = await authenticate(data.username, data.password);
       login(authData.user, authData.token);
-
-      alertToast.success(`Bem vindo, ${authData.user.name}!`, {
-        onAutoClose: () => {
-          router.push("/");
-        },
-      });
+      router.push("/");
     } catch (error: any) {
-      const message = error?.response?.data?.error ?? "Erro inesperado";
-
-      alertToast.error(message);
+      console.error(error);
     } finally {
       setSubmiting(false);
     }
@@ -95,7 +91,7 @@ export default function InvitePage() {
 
     const fetchInvite = async () => {
       try {
-        const response = await validateInvite(token);
+        const response = await inviteService.validate(token);
         setCanRegister(response.can_register);
 
         form.setValue("name", response.user.name);

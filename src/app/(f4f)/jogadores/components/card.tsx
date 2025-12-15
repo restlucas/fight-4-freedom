@@ -2,9 +2,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { Card } from "@/src/components/ui/card";
 import { Badge } from "@/src/components/ui/badge";
-import { medals, ranks } from "@/src/lib/mock-data";
+import { ranks } from "@/src/lib/mock-data";
 import { PlayerStats } from "./stats";
-import { Medal } from "@/src/lib/types";
 import { PlayerMedals } from "./medals";
 import { Avatar, AvatarFallback } from "@/src/components/ui/avatar";
 import { getInitials } from "@/src/utils/string";
@@ -13,10 +12,6 @@ export function PlayerCard({ player, top }: any) {
   const playerRank =
     ranks.find((rank) => rank.id === player.rank_id) ||
     ranks.find((rank) => rank.id === "recruta")!;
-
-  const playerMedals = player.medals
-    .map((id: string) => medals.find((m: Medal) => m.id === id))
-    .filter(Boolean);
 
   return (
     <Link href={`/jogadores/${player.username}`}>
@@ -82,19 +77,7 @@ export function PlayerCard({ player, top }: any) {
                 )}
               </div>
 
-              <div className="flex items-center gap-1 shrink-0">
-                {playerMedals.slice(0, 8).map((m: Medal) => (
-                  <div key={m.id} className="text-xl shrink-0">
-                    {m.icon}
-                  </div>
-                ))}
-
-                {player.medals.length > 8 && (
-                  <div className="flex items-center justify-center h-6 w-6 rounded bg-secondary font-bold border">
-                    +{player.medals.length - 8}
-                  </div>
-                )}
-              </div>
+              <PlayerMedals player={player} />
             </div>
 
             <PlayerStats player={player} top={top} />

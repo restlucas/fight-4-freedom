@@ -1,0 +1,87 @@
+-- CreateEnum
+CREATE TYPE "Platform" AS ENUM ('PC', 'PLAYSTATION', 'XBOX');
+
+-- CreateEnum
+CREATE TYPE "Role" AS ENUM ('ADMIN', 'USER');
+
+-- CreateEnum
+CREATE TYPE "Ranks" AS ENUM ('RECRUTA', 'SOLDADO', 'CABO', 'SARGENTO', 'TENENTE', 'CAPITAO', 'MAJOR', 'CORONEL', 'GENERAL');
+
+-- CreateEnum
+CREATE TYPE "Status" AS ENUM ('ACTIVE', 'INACTIVE', 'PENDING', 'BANNED');
+
+-- CreateEnum
+CREATE TYPE "Rarity" AS ENUM ('COMMON', 'RARE', 'EPIC', 'LEGENDARY', 'UNIQUE');
+
+-- CreateTable
+CREATE TABLE "User" (
+    "id" TEXT NOT NULL,
+    "ea_id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "username" TEXT,
+    "password" TEXT,
+    "role" "Role" NOT NULL DEFAULT 'USER',
+    "avatar" TEXT,
+    "bio" TEXT,
+    "rank" "Ranks" NOT NULL DEFAULT 'RECRUTA',
+    "trackergg_link" TEXT,
+    "platform" "Platform" NOT NULL,
+    "stats" JSONB,
+    "status" "Status" NOT NULL DEFAULT 'PENDING',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Medal" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "rarity" "Rarity" NOT NULL DEFAULT 'COMMON',
+    "image" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Medal_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "UserMedal" (
+    "id" TEXT NOT NULL,
+    "user_id" TEXT NOT NULL,
+    "medal_id" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "UserMedal_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Invite" (
+    "id" TEXT NOT NULL,
+    "user_id" TEXT NOT NULL,
+    "token" TEXT NOT NULL,
+    "expiresAt" TIMESTAMP(3) NOT NULL,
+    "used" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "usedAt" TIMESTAMP(3),
+
+    CONSTRAINT "Invite_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_ea_id_key" ON "User"("ea_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Invite_token_key" ON "Invite"("token");
+
+-- AddForeignKey
+ALTER TABLE "UserMedal" ADD CONSTRAINT "UserMedal_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "UserMedal" ADD CONSTRAINT "UserMedal_medal_id_fkey" FOREIGN KEY ("medal_id") REFERENCES "Medal"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Invite" ADD CONSTRAINT "Invite_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;

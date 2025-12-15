@@ -4,8 +4,8 @@ import { useState, useMemo } from "react";
 import { Card } from "@/src/components/ui/card";
 import { PlayerFilters } from "./components/filters";
 import { PlayerCard } from "./components/card";
-import { useUsersInfinite } from "@/src/hooks/useUsers";
 import { getTopPlayers } from "@/src/utils/player-stats";
+import { useUsersInfinite } from "@/src/queries/users/useUsersInfinite";
 
 type SortOption =
   | "kd"
@@ -28,9 +28,7 @@ export default function JogadoresPage() {
     hasNextPage,
     isFetchingNextPage,
   } = useUsersInfinite({
-    filters: {
-      status: "ACTIVE",
-    },
+    defaultFilters: { status: "ACTIVE" },
   });
 
   const players = data?.pages.flatMap((page) => page) ?? [];

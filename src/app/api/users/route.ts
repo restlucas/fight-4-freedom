@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/src/lib/prisma";
 import bcrypt from "bcrypt";
-import { Platform, Rank, Status } from "@/src/lib/enums";
+import { Platform, Rank, Role, Status } from "@/src/lib/enums";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -10,9 +10,16 @@ export async function GET(request: Request) {
   const platform = searchParams.get("platform");
   const rank = searchParams.get("rank");
   const status = searchParams.get("status");
+  const role = searchParams.get("role");
 
   const users = await prisma.user.findMany({
-    include: { medals: true },
+    include: {
+      userMedals: {
+        include: {
+          medal: true,
+        },
+      },
+    },
     where: {
       ...(username &&
         username !== "" && {
@@ -21,6 +28,7 @@ export async function GET(request: Request) {
       ...(platform && platform !== "all" && { platform: platform as Platform }),
       ...(rank && rank !== "all" && { rank: rank as Rank }),
       ...(status && status !== "all" && { status: status as Status }),
+      ...(role && role !== "all" && { role: role as Role }),
     },
   });
 
@@ -39,7 +47,7 @@ export async function POST(req: NextRequest) {
   });
 
   return NextResponse.json({
-    message: "Usuário criado com sucesso",
+    message: "Jogador registrado com sucesso",
     user: { id: user.id, username: user.username },
   });
 }
@@ -53,7 +61,7 @@ export async function PUT(req: NextRequest) {
   });
 
   return NextResponse.json({
-    message: "Usuário atualizado com sucesso",
+    message: "Jogador atualizado com sucesso",
     user: user,
     ok: true,
   });
