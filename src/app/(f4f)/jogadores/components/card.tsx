@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Card } from "@/src/components/ui/card";
 import { Badge } from "@/src/components/ui/badge";
 import { ranks } from "@/src/lib/mock-data";
-import { PlayerStats } from "./stats";
+import { PlayerStatsMinimal } from "./stats";
 import { PlayerMedals } from "./medals";
 import { Avatar, AvatarFallback } from "@/src/components/ui/avatar";
 import { getInitials } from "@/src/utils/string";
@@ -84,7 +84,7 @@ export function PlayerCard({ player, top }: any) {
               <PlayerMedals player={player} />
             </div>
 
-            <PlayerStats player={player} top={top} />
+            <PlayerStatsMinimal stats={player.userStats[0]} top={top} />
           </div>
         </div>
       </Card>
@@ -139,7 +139,7 @@ export function PlayerCard({ player, top }: any) {
           </div>
         </div>
 
-        <PlayerStats player={player} top={top} />
+        <PlayerStatsMinimal stats={player.userStats[0]} top={top} />
 
         <PlayerMedals player={player} />
       </Card>

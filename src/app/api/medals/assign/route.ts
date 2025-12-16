@@ -14,15 +14,15 @@ export async function POST(request: Request) {
 
     await prisma.$transaction([
       ...(assign.length > 0
-        ? [
-            prisma.userMedal.createMany({
-              data: assign.map((medalId: string) => ({
-                user_id: userId,
-                medal_id: medalId,
-              })),
-              skipDuplicates: true,
-            }),
-          ]
+        ? assign.map((medalId: string) =>
+            prisma.userMedal.upsert({
+              where: {
+                user_id_medal_id: { user_id: userId, medal_id: medalId },
+              },
+              create: { user_id: userId, medal_id: medalId },
+              update: {},
+            })
+          )
         : []),
 
       ...(unassign.length > 0

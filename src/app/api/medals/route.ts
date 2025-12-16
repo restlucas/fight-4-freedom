@@ -66,7 +66,6 @@ export async function GET(request: Request) {
           ...where,
           name: {
             contains: name ?? "",
-            mode: "insensitive",
           },
         },
         skip: (page - 1) * size,
@@ -77,7 +76,6 @@ export async function GET(request: Request) {
           ...where,
           name: {
             contains: name ?? "",
-            mode: "insensitive",
           },
         },
       }),

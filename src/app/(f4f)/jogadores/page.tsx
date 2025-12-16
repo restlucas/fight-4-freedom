@@ -6,8 +6,6 @@ import { PlayerFilters } from "./components/filters";
 import { PlayerCard } from "./components/card";
 import { getTopPlayers } from "@/src/utils/player-stats";
 import { useUsersInfinite } from "@/src/queries/users/useUsersInfinite";
-import { Avatar, AvatarImage } from "@/src/components/ui/avatar";
-import { Skeleton } from "@/src/components/ui/skeleton";
 
 type SortOption =
   | "kd"
@@ -52,8 +50,8 @@ export default function JogadoresPage() {
         return matchesSearch && matchesPlatform;
       })
       .sort((a, b) => {
-        const aVal = (a.stats?.[sortBy] as number) ?? 0;
-        const bVal = (b.stats?.[sortBy] as number) ?? 0;
+        const aVal = (a.userStats[0]?.[sortBy] as number) ?? 0;
+        const bVal = (b.userStats[0]?.[sortBy] as number) ?? 0;
         return bVal - aVal;
       });
   }, [players, searchTerm, platformFilter, sortBy]);
@@ -108,12 +106,6 @@ export default function JogadoresPage() {
             {isFetchingNextPage ? "Carregando..." : "Carregar mais"}
           </button>
         </div>
-      )}
-
-      {filteredPlayers.length === 0 && !isLoading && (
-        <Card className="p-12 text-center border-border">
-          Nenhum jogador encontrado.
-        </Card>
       )}
     </div>
   );

@@ -18,14 +18,40 @@ model User {
   avatar         String?
   bio            String?
   rank           Ranks    @default(RECRUTA)
-  trackergg_link String?
   platform       Platform
-  stats          Json?
   status         Status   @default(PENDING)
   createdAt      DateTime @default(now())
   
-  userInvites         Invite[]
+  userStats          Stats[]
+  userInvites        Invite[]
   userMedals         UserMedal[]
+}
+
+model Stats {
+  id        String @id @default(uuid())
+  user_id   String @unique
+
+  kills           Int      @default(0)
+  deaths          Int      @default(0)
+  wins            Int      @default(0)
+  loses           Int      @default(0)
+  killsPerMinute  Float    @default(0)
+  killsPerMatch   Float    @default(0)
+  headshots       Int      @default(0)
+  assists         Int      @default(0)
+  revives         Int      @default(0)
+  killDeath       Float    @default(0)
+  totalXp         Int      @default(0)
+  matchesPlayed   Int      @default(0)
+  timePlayed      String?
+  accuracy        String?
+  bestClass       String?
+  winPercent      String?
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user      User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 model Medal {
@@ -46,6 +72,8 @@ model UserMedal {
   createdAt DateTime @default(now())
   user      User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
   medal     Medal    @relation(fields: [medal_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, medal_id], name: "user_id_medal_id")
 }
 
 model Invite {

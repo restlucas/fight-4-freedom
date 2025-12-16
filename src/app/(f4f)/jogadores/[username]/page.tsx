@@ -16,6 +16,12 @@ import {
   Clock,
   Percent,
   Award,
+  Angry,
+  GamepadIcon,
+  UserRoundX,
+  Skull,
+  HeartPulse,
+  HandFist,
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -24,10 +30,11 @@ import {
   AvatarImage,
 } from "@/src/components/ui/avatar";
 import { Medal, User } from "@/src/lib/types";
-import { getInitials } from "@/src/utils/string";
+import { getInitials, parseTimePlayed } from "@/src/utils/string";
 import { usersService } from "@/src/services/user.service";
 import { MedalCard } from "@/src/components/medal-card";
 import { Skeleton } from "@/src/components/ui/skeleton";
+import { getStats } from "@/src/lib/get-stats";
 
 export default function PlayerPage() {
   const params = useParams();
@@ -53,7 +60,9 @@ export default function PlayerPage() {
     ranks.find((rank) => rank.id === player.rank) ||
     ranks.find((rank) => rank.id === "recruta")!;
 
-  const playerMedals = player.userMedals.map((medal: any) => medal.medal);
+  const { userMedals, userStats } = player;
+  const playerStats = getStats(userStats ?? null);
+  const playerMedals = userMedals.map((medal: any) => medal.medal);
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -131,63 +140,62 @@ export default function PlayerPage() {
       {/* Estatísticas de Combate */}
       <div className="mb-4">
         <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-          <Crosshair className="h-6 w-6 text-primary" />
           ESTATÍSTICAS DE COMBATE
         </h2>
 
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <StatCard
-            icon={Target}
-            value={player.stats?.kills.toLocaleString() || "0"}
+            icon={Crosshair}
+            value={playerStats.kills}
             label="Total de Kills"
             iconClass="h-5 w-5 text-primary"
           />
 
           <StatCard
-            icon={Crosshair}
-            value={player.stats?.deaths.toLocaleString() || "0"}
+            icon={Skull}
+            value={playerStats.deaths}
             label="Total de Deaths"
-            iconClass="h-5 w-5 text-destructive"
+            iconClass="h-5 w-5 text-white"
           />
 
           <StatCard
-            icon={Heart}
-            value={player.stats?.revives.toLocaleString() || "0"}
+            icon={HeartPulse}
+            value={playerStats.revives}
             label="Total de Revives"
-            iconClass="h-5 w-5 text-accent"
+            iconClass="h-5 w-5 text-red-500"
           />
 
           <StatCard
-            icon={Award}
-            value={player.stats?.assists.toLocaleString() || "0"}
+            icon={HandFist}
+            value={playerStats.assists}
             label="Total de Assists"
-            iconClass="h-5 w-5 text-chart-2"
+            iconClass="h-5 w-5 text-blue-500"
           />
 
           <StatCard
             icon={Trophy}
-            value={`${player.stats?.wins ?? 0}`}
+            value={playerStats.wins}
             label="Vitórias"
-            iconClass="h-5 w-5 text-primary"
+            iconClass="h-5 w-5 text-gold"
           />
 
           <StatCard
-            icon={Trophy}
-            value={`${player.stats?.losses ?? 0}`}
+            icon={Angry}
+            value={playerStats.loses}
             label="Derrotas"
             iconClass="h-5 w-5 text-primary"
           />
 
           <StatCard
-            icon={Target}
-            value={player.stats?.matches.toLocaleString() || "0"}
+            icon={GamepadIcon}
+            value={playerStats.matchesPlayed}
             label="Total de Partidas"
             iconClass="h-5 w-5 text-chart-3"
           />
 
           <StatCard
             icon={Clock}
-            value={player.stats?.hoursPlayed.toLocaleString() || "0"}
+            value={playerStats.timePlayed}
             label="Total de Horas Jogadas"
             iconClass="h-5 w-5 text-chart-4"
           />
@@ -205,15 +213,14 @@ export default function PlayerPage() {
             <div className="flex items-center justify-between">
               <span className="text-lg ">Headshots</span>
               <span className="text-2xl font-bold">
-                {player.stats?.headshots.toLocaleString() || "0"}
+                {playerStats.headshots}
               </span>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-lg ">Taxa de Headshot</span>
               <span className="text-2xl font-bold">
                 {(
-                  ((player.stats?.headshots || 0) /
-                    (player.stats?.kills || 0)) *
+                  ((playerStats.headshots || 0) / (playerStats.kills || 0)) *
                   100
                 ).toFixed(1)}
                 %
@@ -229,15 +236,15 @@ export default function PlayerPage() {
           </h3>
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-lg ">Kills por Partida</span>
+              <span className="text-lg ">Kills por partida</span>
               <span className="text-2xl font-bold">
-                {(player.stats?.kills! / player.stats?.matches!).toFixed(1)}
+                {playerStats.killsPerMatch}
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-lg ">Kills por Hora</span>
+              <span className="text-lg ">Kills por minuto</span>
               <span className="text-2xl font-bold">
-                {(player.stats?.kills! / player.stats?.hoursPlayed!).toFixed(1)}
+                {playerStats.killsPerMinute}
               </span>
             </div>
           </div>
@@ -247,7 +254,6 @@ export default function PlayerPage() {
       {/* Quadro de Medalhas */}
       <div className="mb-8">
         <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-          <Trophy className="h-6 w-6 text-primary" />
           QUADRO DE MEDALHAS ({playerMedals.length})
         </h2>
 
@@ -275,7 +281,7 @@ const StatCard = ({
   iconClass,
 }: {
   icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-  value: string;
+  value: string | number;
   label: string;
   iconClass: string;
 }) => (

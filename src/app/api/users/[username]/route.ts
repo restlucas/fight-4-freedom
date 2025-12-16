@@ -16,6 +16,7 @@ export async function GET(
             medal: true,
           },
         },
+        userStats: true,
       },
     });
 
@@ -26,7 +27,8 @@ export async function GET(
       );
     }
 
-    return NextResponse.json(user);
+    const playerStats = user.userStats?.[0] ?? null;
+    return NextResponse.json({ ...user, userStats: playerStats });
   } catch (error) {
     console.error(error);
     return NextResponse.json(

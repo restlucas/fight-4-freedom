@@ -14,13 +14,14 @@ export type User = {
   platform?: Platform;
   ea_id: string;
   trackergg_link?: string;
+  stats: PlayerStats | null;
+  status: Status;
   userMedals: {
     medal: Medal;
     createdAt: string;
     updatedAt: string;
   }[];
-  stats: PlayerStats | null;
-  status: Status;
+  userStats: PlayerStats | null;
 };
 
 export type Rank = {
@@ -44,14 +45,22 @@ export interface Medal {
 }
 
 export interface PlayerStats {
+  id: string;
+  user_id: string;
   kills: number;
   deaths: number;
-  kd: number;
+  wins: number;
+  loses: number;
+  killsPerMinute: number;
+  killsPerMatch: number;
+  headshots: number;
   assists: number;
   revives: number;
-  matches: number;
-  hoursPlayed: number;
-  wins: number;
-  losses: number;
-  headshots: number;
+  killDeath: number;
+  totalXp: number;
+  matchesPlayed: number;
+  timePlayed?: string | null;
+  accuracy?: string;
+  bestClass?: string;
+  winPercent?: string;
 }

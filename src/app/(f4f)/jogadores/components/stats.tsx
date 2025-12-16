@@ -5,15 +5,25 @@ import {
   Trophy,
   Clock,
   GamepadIcon,
+  UserX,
+  UserRoundX,
+  HeartPulse,
+  Percent,
 } from "lucide-react";
 import { CrownSimpleIcon } from "@phosphor-icons/react";
-import { cloneElement, isValidElement } from "react";
+import type { PlayerStats } from "@/src/lib/types";
+import { getStats } from "@/src/lib/get-stats";
 
 interface StatBoxProps {
   icon: React.ReactNode;
   value: string | number;
-  label: string;
+  label?: string;
   isTop?: boolean;
+}
+
+interface PlayerStatsProps {
+  stats: PlayerStats;
+  top: any;
 }
 
 function StatBox({ icon, value, label, isTop }: StatBoxProps) {
@@ -45,53 +55,50 @@ function StatBox({ icon, value, label, isTop }: StatBoxProps) {
   );
 }
 
-export function PlayerStats({ player, top }: any) {
-  const winRate = player.stats?.matches
-    ? (player.stats.wins / player.stats.matches) * 100
-    : 0;
+export function PlayerStatsMinimal({ stats, top }: PlayerStatsProps) {
+  const playerStats = getStats(stats || null);
 
   return (
     <div className="mt-auto lg:flex lg:flex-wrap gap-3 grid grid-cols-2">
       <StatBox
-        icon={<Crosshair className="h-5 w-5 text-primary/70" />}
-        value={player.stats ? player.stats.kd.toLocaleString() : 0}
+        icon={<Percent className="h-5 w-5 text-accent" />}
+        value={playerStats.killDeath}
         label="K/D"
-        isTop={player.id === top.topKD.id}
+        isTop={true}
       />
 
       <StatBox
-        icon={<Target className="h-5 w-5 text-emerald-500/70" />}
-        value={player.stats ? player.stats.kills.toLocaleString() : 0}
+        icon={<Crosshair className="h-5 w-5 text-primary" />}
+        value={playerStats.kills}
         label="KILLS"
-        isTop={player.id === top.topKiller.id}
+        isTop={true}
       />
 
       <StatBox
-        icon={<Heart className="h-5 w-5 text-red-500/70" />}
-        value={player.stats ? player.stats.revives.toLocaleString() : 0}
+        icon={<HeartPulse className="h-5 w-5 text-red-500/70" />}
+        value={playerStats.revives}
         label="REVIVES"
-        isTop={player.id === top.topReviver.id}
+        isTop={true}
       />
 
       <StatBox
-        icon={<Trophy className="h-5 w-5 text-gold/70" />}
-        value={`${winRate.toLocaleString()}%`}
+        icon={<Trophy className="h-5 w-5 text-gold" />}
+        value={playerStats.winPercent}
         label="WIN"
-        isTop={player.id === top.topWinRate.id}
+        isTop={true}
       />
 
       <StatBox
-        icon={<GamepadIcon className="h-5 w-5 text-emerald-500/70" />}
-        value={player.stats ? player.stats.matches.toLocaleString() : 0}
+        icon={<GamepadIcon className="h-5 w-5 text-chart-3" />}
+        value={playerStats.matchesPlayed}
         label="PARTIDAS"
-        isTop={player.id === top.topMatches.id}
+        isTop={true}
       />
 
       <StatBox
-        icon={<Clock className="h-5 w-5 text-primary/70" />}
-        value={player.stats ? player.stats.hoursPlayed.toLocaleString() : 0}
-        label="H"
-        isTop={player.id === top.topHoursPlayed.id}
+        icon={<Clock className="h-5 w-5 text-chart-4" />}
+        value={playerStats.timePlayed}
+        isTop={true}
       />
     </div>
   );
