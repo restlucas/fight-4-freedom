@@ -39,21 +39,15 @@ export default function JogadoresPage() {
   }, [players]);
 
   const filteredPlayers = useMemo(() => {
-    return players
-      .filter((p) => {
-        const t = searchTerm.toLowerCase();
-        const matchesSearch =
-          p.name.toLowerCase().includes(t) ||
-          p.username.toLowerCase().includes(t);
-        const matchesPlatform =
-          platformFilter === "all" || p.platform === platformFilter;
-        return matchesSearch && matchesPlatform;
-      })
-      .sort((a, b) => {
-        const aVal = (a.userStats[0]?.[sortBy] as number) ?? 0;
-        const bVal = (b.userStats[0]?.[sortBy] as number) ?? 0;
-        return bVal - aVal;
-      });
+    return players.filter((p) => {
+      const t = searchTerm.toLowerCase();
+      const matchesSearch =
+        p.name.toLowerCase().includes(t) ||
+        p.username.toLowerCase().includes(t);
+      const matchesPlatform =
+        platformFilter === "all" || p.platform === platformFilter;
+      return matchesSearch && matchesPlatform;
+    });
   }, [players, searchTerm, platformFilter, sortBy]);
 
   if (error)
