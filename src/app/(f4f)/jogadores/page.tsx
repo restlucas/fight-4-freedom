@@ -4,7 +4,6 @@ import { useState, useMemo } from "react";
 import { Card } from "@/src/components/ui/card";
 import { PlayerFilters } from "./components/filters";
 import { PlayerCard } from "./components/card";
-import { getTopPlayers } from "@/src/utils/player-stats";
 import { useUsersInfinite } from "@/src/queries/users/useUsersInfinite";
 
 type SortOption =
@@ -34,8 +33,7 @@ export default function JogadoresPage() {
   const players = data?.pages.flatMap((page) => page) ?? [];
 
   const top = useMemo(() => {
-    if (!players || players.length === 0) return null;
-    return getTopPlayers(players);
+    return null;
   }, [players]);
 
   const filteredPlayers = useMemo(() => {
