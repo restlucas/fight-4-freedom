@@ -4,7 +4,12 @@ import { getMedalColor, getMedalRarity } from "../utils/medals";
 import { Badge } from "./ui/badge";
 import { Card } from "./ui/card";
 
-export function MedalCard({ medal }: { medal: Medal }) {
+interface MedalCardProps {
+  medal: Medal;
+  showPercentage?: boolean;
+}
+
+export function MedalCard({ medal, showPercentage = true }: MedalCardProps) {
   const { border, background, badge, glow } = getMedalColor(medal.rarity);
   const rarity = getMedalRarity(medal.rarity);
 
@@ -29,20 +34,24 @@ export function MedalCard({ medal }: { medal: Medal }) {
       </div>
 
       <Card className="py-2 px-4 bg-background/50 border-border gap-2">
-        <div className="mb-1 font-semibold">Como obter:</div>
+        {showPercentage && (
+          <div className="mb-1 font-semibold">Como obter:</div>
+        )}
         <p>{medal.description}</p>
       </Card>
 
-      <div className="flex items-center justify-between mt-auto">
-        <div className="flex items-center gap-2">
-          <Trophy className="h-4 w-4 text-muted-foreground" />
-          <span className="font-semibold">Conquistada por:</span>
-        </div>
+      {showPercentage && (
+        <div className="flex items-center justify-between mt-auto">
+          <div className="flex items-center gap-2">
+            <Trophy className="h-4 w-4 text-muted-foreground" />
+            <span className="font-semibold">Conquistada por:</span>
+          </div>
 
-        <div className="text-right font-bold">
-          {medal.achieved.percentage}% do clã
+          <div className="text-right font-bold">
+            {medal.achieved.percentage}% do clã
+          </div>
         </div>
-      </div>
+      )}
     </Card>
   );
 }
