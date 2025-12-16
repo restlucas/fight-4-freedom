@@ -92,6 +92,8 @@ export function AssignMedalsDialog({ player }: { player: User }) {
       };
 
       await assignMedals.mutateAsync(payload);
+      setToAssign(new Set());
+      setToUnassign(new Set());
     } catch (error) {
       console.error(error);
     } finally {
