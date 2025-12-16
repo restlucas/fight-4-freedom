@@ -24,4 +24,13 @@ export const medalsService = {
     const { data } = await api.delete("/medals", { data: { medalId: id } });
     return data;
   },
+
+  assign: async (payload: {
+    userId: string;
+    assign: string[];
+    unassign: string[];
+  }) => {
+    const { data } = await api.post("/medals/assign", payload);
+    return data;
+  },
 };

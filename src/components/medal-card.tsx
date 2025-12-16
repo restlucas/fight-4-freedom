@@ -39,7 +39,9 @@ export function MedalCard({ medal }: { medal: Medal }) {
           <span className="font-semibold">Conquistada por:</span>
         </div>
 
-        <div className="text-right font-bold">0% do clã</div>
+        <div className="text-right font-bold">
+          {medal.achieved.percentage}% do clã
+        </div>
       </div>
     </Card>
   );

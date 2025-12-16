@@ -1,8 +1,8 @@
-import { usersService } from "@/src/services/user.service";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { medalsKeys } from "./medals.queryKeys";
 import { alertToast } from "@/src/lib/alert-toast";
 import { medalsService } from "@/src/services/medal.service";
+import { usersKeys } from "../users/users.queryKeys";
 
 export function useMedalsMutations() {
   const queryClient = useQueryClient();
@@ -62,9 +62,32 @@ export function useMedalsMutations() {
     },
   });
 
+  const assignMedals = useMutation({
+    mutationFn: medalsService.assign,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: medalsKeys.listAll(),
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: usersKeys.listAll(),
+      });
+
+      alertToast.success("Medalhas atribuídas com sucesso!", {
+        duration: 3000,
+      });
+    },
+    onError: (error) => {
+      alertToast.error(error.message, {
+        duration: 3000,
+      });
+    },
+  });
+
   return {
     createMedal,
     updateMedal,
     deleteMedal,
+    assignMedals,
   };
 }

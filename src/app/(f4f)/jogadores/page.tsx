@@ -6,6 +6,8 @@ import { PlayerFilters } from "./components/filters";
 import { PlayerCard } from "./components/card";
 import { getTopPlayers } from "@/src/utils/player-stats";
 import { useUsersInfinite } from "@/src/queries/users/useUsersInfinite";
+import { Avatar, AvatarImage } from "@/src/components/ui/avatar";
+import { Skeleton } from "@/src/components/ui/skeleton";
 
 type SortOption =
   | "kd"
@@ -149,16 +151,6 @@ const SkeletonPlayers = () => {
                 <div className="animate-pulse h-3 w-5/6 bg-muted-foreground/20 rounded" />
                 <div className="animate-pulse h-3 w-3/4 bg-muted-foreground/20 rounded" />
               </div>
-            </div>
-
-            {/* Medals */}
-            <div className="flex items-center gap-1 shrink-0">
-              {Array.from({ length: 8 }).map((_, j) => (
-                <div
-                  key={j}
-                  className="animate-pulse w-6 h-6 bg-muted-foreground/20 rounded"
-                />
-              ))}
             </div>
           </div>
 

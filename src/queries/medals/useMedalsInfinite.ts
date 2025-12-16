@@ -11,6 +11,14 @@ interface UseMedalsInfiniteProps {
   staleTime?: number;
 }
 
+interface MedalsResponse {
+  items: Medal[];
+  total: number;
+  page: number;
+  size: number;
+  totalPages: number;
+}
+
 export function useMedalsInfinite({
   filters = {},
   defaultFilters = {},
@@ -25,7 +33,7 @@ export function useMedalsInfinite({
     queryKey: medalsKeys.list(mergedFilters),
 
     queryFn: async ({ pageParam = 0 }) => {
-      const { data } = await api.get<Medal[]>("/medals", {
+      const { data } = await api.get<MedalsResponse>("/medals", {
         params: {
           skip: pageParam,
           take: PAGE_SIZE,
@@ -33,7 +41,7 @@ export function useMedalsInfinite({
         },
       });
 
-      return data;
+      return data.items;
     },
 
     getNextPageParam: (lastPage, allPages) => {

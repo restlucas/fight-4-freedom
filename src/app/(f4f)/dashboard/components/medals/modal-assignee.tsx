@@ -13,13 +13,22 @@ import { Input } from "@/src/components/ui/input";
 import { Skeleton } from "@/src/components/ui/skeleton";
 import { User } from "@/src/lib/types";
 import { MedalsFilters } from "@/src/queries/medals/medals.queryKeys";
+import { useMedalsMutations } from "@/src/queries/medals/useMedalsMutations";
 import { useMedalsPaginated } from "@/src/queries/medals/useMedalsPaginate";
-import { Award, Check } from "lucide-react";
-import { useState } from "react";
+import { Award, Check, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 
 export function AssignMedalsDialog({ player }: { player: User }) {
+  const { assignMedals } = useMedalsMutations();
+
   const [open, setOpen] = useState(false);
-  const [selectedMedals, setSelectedMedals] = useState<string[]>([]);
+  const [submitting, setSubmitting] = useState(false);
+
+  const [toAssign, setToAssign] = useState<Set<string>>(new Set());
+  const [toUnassign, setToUnassign] = useState<Set<string>>(new Set());
+
+  const hasAssignedChanges = toUnassign.size > 0;
+  const hasUnassignedChanges = toAssign.size > 0;
 
   const [filters, setFilters] = useState<MedalsFilters>({
     name: "",
@@ -29,26 +38,87 @@ export function AssignMedalsDialog({ player }: { player: User }) {
     assigned: true,
   });
 
-  const { data, isLoading, isFetching } = useMedalsPaginated({
-    filters,
-  });
+  const { data, isLoading, isFetching } = useMedalsPaginated({ filters });
 
-  const medals = data ?? [];
+  const medals = data?.items ?? [];
+  const totalPages = data?.totalPages ?? 0;
+  const total = data?.total ?? 0;
+  const currentPage = data?.page ?? 1;
+
+  const selectedMedals = useMemo(() => {
+    const selected = new Set<string>();
+
+    medals.forEach((medal) => {
+      if (filters.assigned) {
+        selected.add(medal.id);
+
+        if (toUnassign.has(medal.id)) {
+          selected.delete(medal.id);
+        }
+      } else {
+        if (toAssign.has(medal.id)) {
+          selected.add(medal.id);
+        }
+      }
+    });
+
+    return selected;
+  }, [medals, filters.assigned, toAssign, toUnassign]);
 
   const toggleMedal = (medalId: string) => {
-    setSelectedMedals((prev) =>
-      prev.includes(medalId)
-        ? prev.filter((id) => id !== medalId)
-        : [...prev, medalId]
-    );
+    if (filters.assigned) {
+      setToUnassign((prev) => {
+        const next = new Set(prev);
+        next.has(medalId) ? next.delete(medalId) : next.add(medalId);
+        return next;
+      });
+    } else {
+      setToAssign((prev) => {
+        const next = new Set(prev);
+        next.has(medalId) ? next.delete(medalId) : next.add(medalId);
+        return next;
+      });
+    }
   };
+
+  const onSubmit = async () => {
+    setSubmitting(true);
+
+    try {
+      const payload = {
+        userId: player.id,
+        assign: Array.from(toAssign),
+        unassign: Array.from(toUnassign),
+      };
+
+      await assignMedals.mutateAsync(payload);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  useEffect(() => {
+    if (open) {
+      setToAssign(new Set());
+      setToUnassign(new Set());
+      setFilters({
+        name: "",
+        page: 1,
+        size: 9,
+        assignee: player.id,
+        assigned: true,
+      });
+    }
+  }, [open]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" size="sm" className="gap-2 bg-transparent">
           <Award className="h-4 w-4" />
-          Medalhas (0)
+          Medalhas ({player.userMedals.length})
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[1200px] max-h-[80vh] overflow-y-auto">
@@ -65,7 +135,7 @@ export function AssignMedalsDialog({ player }: { player: User }) {
         <div className="flex flex-wrap gap-2 items-center">
           <Input
             placeholder="Pesquisar medalhas"
-            className="w-auto lg:min-w-[300px]"
+            className="max-sm:w-full w-auto lg:min-w-[300px]"
             value={filters.name}
             onChange={(e) => setFilters({ ...filters, name: e.target.value })}
           />
@@ -73,24 +143,40 @@ export function AssignMedalsDialog({ player }: { player: User }) {
           <Button
             variant="outline"
             onClick={() => setFilters({ ...filters, assigned: true })}
-            className={
+            className={`relative ${
               filters.assigned === true
                 ? "bg-primary text-white"
                 : "bg-transparent"
-            }
+            }`}
           >
             Atribuídas
+            {hasAssignedChanges && (
+              <div className="absolute -top-1 -right-1">
+                <span className="relative flex size-3">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-75" />
+                  <span className="relative inline-flex size-3 rounded-full bg-white" />
+                </span>
+              </div>
+            )}
           </Button>
           <Button
             variant="outline"
             onClick={() => setFilters({ ...filters, assigned: false })}
-            className={
+            className={`relative ${
               filters.assigned === false
                 ? "bg-primary text-white"
                 : "bg-transparent"
-            }
+            }`}
           >
             Não atribuídas
+            {hasUnassignedChanges && (
+              <div className="absolute -top-1 -right-1">
+                <span className="relative flex size-3">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-75" />
+                  <span className="relative inline-flex size-3 rounded-full bg-white" />
+                </span>
+              </div>
+            )}
           </Button>
         </div>
 
@@ -119,7 +205,8 @@ export function AssignMedalsDialog({ player }: { player: User }) {
             </div>
           ) : (
             medals.map((medal) => {
-              const isSelected = selectedMedals.includes(medal.id);
+              const isSelected = selectedMedals.has(medal.id);
+
               return (
                 <button
                   key={medal.id}
@@ -153,12 +240,55 @@ export function AssignMedalsDialog({ player }: { player: User }) {
             })
           )}
         </div>
+
+        <div className="flex items-center justify-between">
+          <span className="text-sm text-muted-foreground">
+            Página {currentPage} de {totalPages} ({total} medalhas)
+          </span>
+
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="icon"
+              disabled={currentPage <= 1}
+              onClick={() =>
+                setFilters((prev) => ({ ...prev, page: currentPage - 1 }))
+              }
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="icon"
+              disabled={currentPage >= totalPages}
+              onClick={() =>
+                setFilters((prev) => ({ ...prev, page: currentPage + 1 }))
+              }
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => setOpen(false)}>
             Cancelar
           </Button>
-          <Button onClick={() => setOpen(false)}>
-            Salvar Alterações ({selectedMedals.length} medalhas)
+          <Button onClick={onSubmit} disabled={submitting}>
+            {submitting ? (
+              <>
+                Salvando alterações
+                <Loader2 className="h-4 w-4 animate-spin" />
+              </>
+            ) : (
+              <>
+                Salvar alterações{" "}
+                {hasAssignedChanges || hasUnassignedChanges
+                  ? `(${toAssign.size + toUnassign.size} alteraç${
+                      toAssign.size + toUnassign.size > 1 ? "ões" : "ão"
+                    })`
+                  : ""}
+              </>
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>

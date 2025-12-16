@@ -86,6 +86,7 @@ export default function MedalhasPage() {
       <div className="flex items-center flex-wrap gap-4">
         {medalRarityFiltersConfig.map((filter) => (
           <Button
+            key={filter.value}
             variant={filters.rarity === filter.value ? "default" : "outline"}
             onClick={() =>
               setFilters({ rarity: filter.value as Rarity | "all" })

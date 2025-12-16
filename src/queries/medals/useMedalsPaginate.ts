@@ -5,38 +5,41 @@ import { MedalsFilters, medalsKeys } from "./medals.queryKeys";
 
 const PAGE_SIZE = 20;
 
-interface UseMedalsPaginatedProps {
-  filters?: MedalsFilters;
-  defaultFilters?: MedalsFilters;
-  staleTime?: number;
-}
+export type PaginatedResponse<T> = {
+  items: T[];
+  total: number;
+  page: number;
+  size: number;
+  totalPages: number;
+};
 
 export function useMedalsPaginated({
   filters = {},
   defaultFilters = {},
   staleTime = 1000 * 60 * 1,
-}: UseMedalsPaginatedProps) {
+}: {
+  filters?: MedalsFilters;
+  defaultFilters?: MedalsFilters;
+  staleTime?: number;
+}) {
   const mergedFilters = {
+    page: 1,
+    size: PAGE_SIZE,
     ...defaultFilters,
     ...filters,
   };
 
   return useQuery({
-    queryKey: medalsKeys.list({
-      ...mergedFilters,
-    }),
+    queryKey: medalsKeys.list(mergedFilters),
 
     queryFn: async () => {
-      const { data } = await api.get<Medal[]>("/medals", {
-        params: {
-          page: mergedFilters.page,
-          take: PAGE_SIZE,
-          ...mergedFilters,
-        },
+      const { data } = await api.get<PaginatedResponse<Medal>>("/medals", {
+        params: mergedFilters,
       });
 
       return data;
     },
+
     placeholderData: keepPreviousData,
     gcTime: 1000 * 60 * 5,
     staleTime,

@@ -37,6 +37,10 @@ export interface Medal {
   image?: string;
   icon: string;
   rarity: Rarity;
+  achieved: {
+    count: number;
+    percentage: number;
+  };
 }
 
 export interface PlayerStats {

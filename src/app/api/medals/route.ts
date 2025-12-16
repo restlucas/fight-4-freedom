@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/src/lib/prisma";
-import bcrypt from "bcrypt";
 import { Rarity } from "@/src/lib/enums";
 
 export async function GET(request: Request) {
@@ -8,53 +7,112 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
 
     const name = searchParams.get("name");
-    const rariry = searchParams.get("rarity");
+    const rarity = searchParams.get("rarity");
     const assignee = searchParams.get("assignee");
     const assigned = searchParams.get("assigned");
-    const page = searchParams.get("page");
-    const size = searchParams.get("size");
 
-    const medals = await prisma.medal.findMany({
-      include: { userMedals: true },
-      where: {
-        ...(name &&
-          name.trim() !== "" && {
-            name: {
-              contains: name,
-              mode: "insensitive",
-            },
-          }),
-        ...(rariry && rariry !== "all" && { rarity: rariry as Rarity }),
-        ...(assignee &&
-          assigned === "true" && {
-            userMedals: {
-              some: {
-                user_id: assignee,
-              },
-            },
-          }),
-        ...(assignee &&
-          assigned === "false" && {
-            userMedals: {
-              none: {
-                user_id: assignee,
-              },
-            },
-          }),
-      },
-      ...(page &&
-        size && {
-          skip: (parseInt(page) - 1) * parseInt(size),
-          take: parseInt(size),
+    const page = Number(searchParams.get("page") ?? 1);
+    const size = Number(searchParams.get("size") ?? 20);
+
+    const where = {
+      ...(name &&
+        name.trim() !== "" && {
+          name: {
+            contains: name,
+            mode: "insensitive",
+          },
         }),
+      ...(rarity && rarity !== "all" && { rarity: rarity as Rarity }),
+      ...(assignee &&
+        assigned === "true" && {
+          userMedals: {
+            some: {
+              user_id: assignee,
+            },
+          },
+        }),
+      ...(assignee &&
+        assigned === "false" && {
+          userMedals: {
+            none: {
+              user_id: assignee,
+            },
+          },
+        }),
+    };
+
+    const totalClanMembers = await prisma.user.count({
+      where: {
+        status: "ACTIVE",
+      },
     });
 
-    return NextResponse.json(medals);
+    const [items, total] = await prisma.$transaction([
+      prisma.medal.findMany({
+        include: {
+          _count: {
+            select: {
+              userMedals: {
+                where: {
+                  user: {
+                    status: "ACTIVE",
+                  },
+                },
+              },
+            },
+          },
+        },
+        where: {
+          ...where,
+          name: {
+            contains: name ?? "",
+            mode: "insensitive",
+          },
+        },
+        skip: (page - 1) * size,
+        take: size,
+      }),
+      prisma.medal.count({
+        where: {
+          ...where,
+          name: {
+            contains: name ?? "",
+            mode: "insensitive",
+          },
+        },
+      }),
+    ]);
+
+    const itemsWithPercentage = items.map((medal) => {
+      const achieved = medal._count.userMedals;
+
+      const achievedPercentage =
+        totalClanMembers > 0
+          ? Math.round((achieved / totalClanMembers) * 100)
+          : 0;
+
+      return {
+        ...medal,
+        achieved: {
+          count: achieved,
+          percentage: achievedPercentage,
+        },
+      };
+    });
+
+    return NextResponse.json({
+      items: itemsWithPercentage,
+      total,
+      page,
+      size,
+      totalPages: Math.ceil(total / size),
+      totalClanMembers,
+    });
   } catch (error) {
     return NextResponse.json(
       {
         message: "Erro ao buscar medalhas",
-        error: error,
+        error,
         ok: false,
       },
       { status: 500 }
