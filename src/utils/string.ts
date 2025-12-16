@@ -12,6 +12,10 @@ export function getInitials(name: string): string {
 }
 
 export function parseTimePlayed(str: string) {
+  if (str === "") {
+    return "0min";
+  }
+
   const parts = str.split(",").map((x) => x.trim());
   let totalMinutes = 0;
 
