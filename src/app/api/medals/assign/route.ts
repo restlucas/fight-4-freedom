@@ -17,7 +17,10 @@ export async function POST(request: Request) {
         ? assign.map((medalId: string) =>
             prisma.userMedal.upsert({
               where: {
-                user_id_medal_id: { user_id: userId, medal_id: medalId },
+                user_id_medal_id: {
+                  user_id: userId,
+                  medal_id: medalId,
+                },
               },
               create: { user_id: userId, medal_id: medalId },
               update: {},
