@@ -4,7 +4,7 @@ import { mapStats } from "@/src/utils/map-stats";
 
 const CHUNK_SIZE = 10;
 
-export async function POST() {
+export async function GET() {
   const users = await prisma.user.findMany({
     where: {
       ea_id: { not: "" },
