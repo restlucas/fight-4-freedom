@@ -219,10 +219,11 @@ export default function PlayerPage() {
             <div className="flex items-center justify-between">
               <span className="text-lg ">Taxa de Headshot</span>
               <span className="text-2xl font-bold">
-                {(
-                  ((playerStats.headshots || 0) / (playerStats.kills || 0)) *
-                  100
-                ).toFixed(1)}
+                {playerStats.headshots && playerStats.kills
+                  ? ((playerStats.headshots / playerStats.kills) * 100).toFixed(
+                      1
+                    )
+                  : 0}
                 %
               </span>
             </div>

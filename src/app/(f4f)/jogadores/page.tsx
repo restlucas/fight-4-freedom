@@ -49,7 +49,11 @@ export default function JogadoresPage() {
   }, [players, searchTerm, platformFilter, sortBy]);
 
   if (error)
-    return <Card className="p-12 text-center">Erro ao carregar usuários.</Card>;
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <Card className="p-12 text-center">Erro ao carregar usuários.</Card>
+      </div>
+    );
 
   return (
     <div className="container mx-auto px-4 py-8">
