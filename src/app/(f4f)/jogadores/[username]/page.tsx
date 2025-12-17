@@ -35,6 +35,7 @@ import { usersService } from "@/src/services/user.service";
 import { MedalCard } from "@/src/components/medal-card";
 import { Skeleton } from "@/src/components/ui/skeleton";
 import { getStats } from "@/src/lib/get-stats";
+import { getBestClass } from "@/src/utils/map-stats";
 
 export default function PlayerPage() {
   const params = useParams();
@@ -74,8 +75,21 @@ export default function PlayerPage() {
       </Button>
 
       {/* Header do Jogador */}
-      <Card className="p-8 mb-8 border-border">
-        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+      <Card className="p-8 mb-8 border-border relative overflow-hidden">
+        {playerStats.bestClass && (
+          <>
+            <div className="absolute inset-0 z-0">
+              <img
+                src={`/images/classes/${playerStats.bestClass.toLowerCase()}.avif`}
+                alt={getBestClass(playerStats.bestClass)}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-black/70" />
+            </div>
+          </>
+        )}
+
+        <div className="relative z-10 flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
           {/* Avatar Section */}
           <Avatar className="max-lg:m-auto relative w-32 h-32 md:w-40 md:h-40 rounded-lg overflow-hidden border-2 border-primary/50">
             <AvatarImage src={player.avatar} alt={player.name} />
@@ -87,19 +101,13 @@ export default function PlayerPage() {
           {/* Player Info */}
           <div className="flex-1">
             <div className="flex items-center justify-center">
-              <Badge
-                variant="outline"
-                className="text-base px-4 mb-2 lg:hidden"
-              >
+              <Badge className="text-base px-4 mb-2 lg:hidden text-white">
                 {player.platform}
               </Badge>
             </div>
             <div className="flex flex-wrap items-center max-lg:justify-center gap-3 mb-2">
               <h1 className="text-4xl md:text-5xl font-bold">{player.name}</h1>
-              <Badge
-                variant="outline"
-                className="text-base px-4 hidden lg:block"
-              >
+              <Badge className="text-base px-3 hidden lg:block text-white">
                 {player.platform}
               </Badge>
             </div>
@@ -110,29 +118,42 @@ export default function PlayerPage() {
             </div>
 
             {/* Bio */}
-            {player.bio && <p className="my-6 leading-relaxed">{player.bio}</p>}
+            {player.bio && (
+              <p className="my-6 leading-relaxed p-2 max-lg:mx-auto max-lg:text-center max-lg:bg-secondary max-lg:rounded-lg">
+                {player.bio}
+              </p>
+            )}
           </div>
 
-          {/* Patente */}
-          <div className="flex items-center max-lg:justify-center gap-2">
-            <span>Membro desde:</span>
-            <span className="text-foreground">
-              {new Date(player.createdAt).toLocaleDateString("pt-BR", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
-            </span>
-          </div>
-          <div className="bg-secondary/50 rounded-lg p-4 min-w-[100px] flex items-center justify-center gap-4 flex-col">
-            <Image
-              src={playerRank.src}
-              alt={playerRank.name}
-              width={100}
-              height={100}
-              className="w-20 h-20 object-contain"
-            />
-            <span className="text-xl font-bold">{playerRank.name}</span>
+          {/* Classe e patente */}
+          <div className="flex items-center gap-4 w-auto">
+            {playerStats.bestClass && (
+              <div className="relative bg-secondary rounded-lg p-4 min-w-[100px] max-lg:flex-1 flex items-center justify-center gap-4 flex-col">
+                <Badge className="absolute -top-2 -left-6 text-white">
+                  Melhor classe
+                </Badge>
+                <Image
+                  src={`/icons/${playerStats.bestClass.toLowerCase()}.svg`}
+                  alt={getBestClass(playerStats.bestClass)}
+                  width={100}
+                  height={100}
+                  className="w-20 h-20 object-contain"
+                />
+                <span className="text-xl font-bold">
+                  {getBestClass(playerStats.bestClass)}
+                </span>
+              </div>
+            )}
+            <div className="bg-secondary rounded-lg p-4 min-w-[100px] max-lg:flex-1 flex items-center justify-center gap-4 flex-col">
+              <Image
+                src={playerRank.src}
+                alt={playerRank.name}
+                width={100}
+                height={100}
+                className="w-20 h-20 object-contain"
+              />
+              <span className="text-xl font-bold">{playerRank.name}</span>
+            </div>
           </div>
         </div>
       </Card>
@@ -204,7 +225,7 @@ export default function PlayerPage() {
 
       {/* Estatísticas Adicionais */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-        <Card className="p-4 border-border gap-2">
+        <Card className="p-4 border-border gap-2 hover:border-primary/50 transition-all duration-300">
           <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
             <Crosshair className="h-5 w-5 text-primary" />
             Precisão
@@ -230,7 +251,7 @@ export default function PlayerPage() {
           </div>
         </Card>
 
-        <Card className="p-4 border-border gap-2">
+        <Card className="p-4 border-border gap-2 hover:border-primary/50 transition-all duration-300">
           <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
             <Percent className="h-5 w-5 text-accent" />
             Performance
@@ -286,12 +307,12 @@ const StatCard = ({
   label: string;
   iconClass: string;
 }) => (
-  <Card className="p-4 border-border gap-2">
+  <Card className="p-4 border-border gap-2 hover:border-primary/50 transition-all duration-300">
     <div className="flex items-center justify-between mb-2">
       <Icon className={iconClass} />
-      <div className="text-3xl font-bold">{value}</div>
+      <div className="text-2xl lg:text-3xl font-bold">{value}</div>
     </div>
-    <div className="text-lg">{label}</div>
+    <div className="text-sm lg:text-lg">{label}</div>
   </Card>
 );
 

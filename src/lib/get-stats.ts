@@ -1,5 +1,5 @@
 import { parseTimePlayed } from "../utils/string";
-import { PlayerStats } from "./types";
+import { PlayerStats, UserTopStats } from "./types";
 
 export function getStats(userStats: PlayerStats | null) {
   const timePlayed = parseTimePlayed(userStats?.timePlayed || "");
@@ -19,7 +19,18 @@ export function getStats(userStats: PlayerStats | null) {
     matchesPlayed: userStats?.matchesPlayed || 0,
     timePlayed,
     accuracy: userStats?.accuracy || 0,
-    bestClass: userStats?.bestClass || 0,
+    bestClass: userStats?.bestClass || "",
     winPercent: userStats?.winPercent || 0,
+  };
+}
+
+export function getTopStats(userTopStats: UserTopStats[]) {
+  return {
+    topKillDeath: userTopStats.some((s) => s.category === "KILLS_DEATHS"),
+    topKills: userTopStats.some((s) => s.category === "KILLS"),
+    topRevive: userTopStats.some((s) => s.category === "REVIVES"),
+    topAssists: userTopStats.some((s) => s.category === "ASSISTS"),
+    topMatches: userTopStats.some((s) => s.category === "MATCHES"),
+    topTimePlayed: userTopStats.some((s) => s.category === "TIME_PLAYED"),
   };
 }

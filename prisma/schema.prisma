@@ -25,6 +25,7 @@ model User {
   userStats          Stats[]
   userInvites        Invite[]
   userMedals         UserMedal[]
+  userTopStats       TopStats[] 
 }
 
 model Stats {
@@ -88,6 +89,15 @@ model Invite {
   user      User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
+model TopStats {
+  id         String           @id @default(uuid())
+  category   TopStatsCategory @unique
+  user_id    String?
+  updatedAt  DateTime         @updatedAt
+
+  user       User?             @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
 enum Platform {
   PC
   PLAYSTATION
@@ -124,4 +134,13 @@ enum Rarity {
   EPIC
   LEGENDARY
   UNIQUE
+}
+
+enum TopStatsCategory {
+  KILLS_DEATHS
+  KILLS
+  REVIVES
+  ASSISTS
+  MATCHES
+  TIME_PLAYED
 }

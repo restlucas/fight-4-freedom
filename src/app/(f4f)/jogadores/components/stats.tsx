@@ -9,21 +9,17 @@ import {
   UserRoundX,
   HeartPulse,
   Percent,
+  Handshake,
 } from "lucide-react";
 import { CrownSimpleIcon } from "@phosphor-icons/react";
-import type { PlayerStats } from "@/src/lib/types";
-import { getStats } from "@/src/lib/get-stats";
+import type { PlayerStats, UserTopStats } from "@/src/lib/types";
+import { getStats, getTopStats } from "@/src/lib/get-stats";
 
 interface StatBoxProps {
   icon: React.ReactNode;
   value: string | number;
   label?: string;
   isTop?: boolean;
-}
-
-interface PlayerStatsProps {
-  stats: PlayerStats;
-  top: any;
 }
 
 function StatBox({ icon, value, label, isTop }: StatBoxProps) {
@@ -37,26 +33,39 @@ function StatBox({ icon, value, label, isTop }: StatBoxProps) {
         <CrownSimpleIcon
           size={16}
           weight="fill"
-          className="text-gold absolute -left-2 -top-2"
+          className="text-yellow-500 absolute -left-2 -top-2"
         />
       )}
 
       {icon}
 
       <span
-        className={`text-xl flex-nowrap font-bold ${isTop ? "text-gold" : ""}`}
+        className={`text-xl flex-nowrap font-bold ${
+          isTop ? "text-yellow-500" : ""
+        }`}
       >
         {value}
       </span>
-      <span className={`font-semibold flex-nowrap ${isTop ? "text-gold" : ""}`}>
+      <span
+        className={`font-semibold flex-nowrap ${
+          isTop ? "text-yellow-500" : ""
+        }`}
+      >
         {label}
       </span>
     </div>
   );
 }
 
-export function PlayerStatsMinimal({ stats, top }: PlayerStatsProps) {
+export function PlayerStatsMinimal({
+  stats,
+  topStats,
+}: {
+  stats: PlayerStats;
+  topStats: UserTopStats[];
+}) {
   const playerStats = getStats(stats || null);
+  const playerTopStats = getTopStats(topStats);
 
   return (
     <div className="mt-auto lg:flex lg:flex-wrap gap-3 grid grid-cols-2">
@@ -64,41 +73,41 @@ export function PlayerStatsMinimal({ stats, top }: PlayerStatsProps) {
         icon={<Percent className="h-5 w-5 text-accent" />}
         value={playerStats.killDeath}
         label="K/D"
-        isTop={true}
+        isTop={playerTopStats.topKillDeath}
       />
 
       <StatBox
         icon={<Crosshair className="h-5 w-5 text-primary" />}
         value={playerStats.kills}
         label="KILLS"
-        isTop={true}
+        isTop={playerTopStats.topKills}
       />
 
       <StatBox
         icon={<HeartPulse className="h-5 w-5 text-red-500/70" />}
         value={playerStats.revives}
         label="REVIVES"
-        isTop={true}
+        isTop={playerTopStats.topRevive}
       />
 
       <StatBox
-        icon={<Trophy className="h-5 w-5 text-gold" />}
-        value={playerStats.winPercent}
-        label="WIN"
-        isTop={true}
+        icon={<Handshake className="h-5 w-5 text-emerald-500" />}
+        value={playerStats.assists}
+        label="ASSISTS"
+        isTop={playerTopStats.topAssists}
       />
 
       <StatBox
         icon={<GamepadIcon className="h-5 w-5 text-chart-3" />}
         value={playerStats.matchesPlayed}
         label="PARTIDAS"
-        isTop={true}
+        isTop={playerTopStats.topMatches}
       />
 
       <StatBox
         icon={<Clock className="h-5 w-5 text-chart-4" />}
         value={playerStats.timePlayed}
-        isTop={true}
+        isTop={playerTopStats.topTimePlayed}
       />
     </div>
   );

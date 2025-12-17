@@ -1,4 +1,4 @@
-import { Platform, Rarity, Status } from "./enums";
+import { Platform, Rarity, Status, TopStatsCategory } from "./enums";
 
 export type User = {
   id: string;
@@ -21,7 +21,8 @@ export type User = {
     createdAt: string;
     updatedAt: string;
   }[];
-  userStats: PlayerStats | null;
+  userStats: PlayerStats;
+  userTopStats: UserTopStats[];
 };
 
 export type Rank = {
@@ -63,4 +64,11 @@ export interface PlayerStats {
   accuracy?: string;
   bestClass?: string;
   winPercent?: string;
+}
+
+export interface UserTopStats {
+  id: string;
+  category: TopStatsCategory;
+  user_id: string;
+  updatedAt: string;
 }

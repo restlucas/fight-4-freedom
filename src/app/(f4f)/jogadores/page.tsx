@@ -32,10 +32,6 @@ export default function JogadoresPage() {
 
   const players = data?.pages.flatMap((page) => page) ?? [];
 
-  const top = useMemo(() => {
-    return null;
-  }, [players]);
-
   const filteredPlayers = useMemo(() => {
     return players.filter((p) => {
       const t = searchTerm.toLowerCase();
@@ -83,7 +79,7 @@ export default function JogadoresPage() {
           Array.from({ length: 5 }).map((_, i) => <SkeletonPlayers key={i} />)
         ) : filteredPlayers.length > 0 ? (
           filteredPlayers.map((player) => (
-            <PlayerCard key={player.id} player={player} top={top} />
+            <PlayerCard key={player.id} player={player} />
           ))
         ) : (
           <Card className="p-12 text-center border-border">

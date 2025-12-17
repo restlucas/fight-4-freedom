@@ -7,12 +7,12 @@ import { PlayerStatsMinimal } from "./stats";
 import { PlayerMedals } from "./medals";
 import { Avatar, AvatarFallback } from "@/src/components/ui/avatar";
 import { getInitials } from "@/src/utils/string";
+import { User } from "@/src/lib/types";
 
-export function PlayerCard({ player, top }: any) {
+export function PlayerCard({ player }: { player: User }) {
   const playerRank =
-    ranks.find((rank) => rank.id === player.rank_id) ||
+    ranks.find((rank) => rank.id === player.rank) ||
     ranks.find((rank) => rank.id === "recruta")!;
-
   return (
     <Link href={`/jogadores/${player.username}`}>
       {/* Desktop View - Min 1024px*/}
@@ -84,7 +84,10 @@ export function PlayerCard({ player, top }: any) {
               <PlayerMedals player={player} />
             </div>
 
-            <PlayerStatsMinimal stats={player.userStats[0]} top={top} />
+            <PlayerStatsMinimal
+              stats={player.userStats}
+              topStats={player.userTopStats}
+            />
           </div>
         </div>
       </Card>
@@ -139,7 +142,10 @@ export function PlayerCard({ player, top }: any) {
           </div>
         </div>
 
-        <PlayerStatsMinimal stats={player.userStats[0]} top={top} />
+        <PlayerStatsMinimal
+          stats={player.userStats}
+          topStats={player.userTopStats}
+        />
 
         <PlayerMedals player={player} />
       </Card>

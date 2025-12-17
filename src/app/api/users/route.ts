@@ -20,6 +20,7 @@ export async function GET(request: Request) {
         },
       },
       userStats: true,
+      userTopStats: true,
     },
     where: {
       ...(username &&
@@ -33,7 +34,12 @@ export async function GET(request: Request) {
     },
   });
 
-  return NextResponse.json(users);
+  const usersWithFirstStats = users.map((user) => ({
+    ...user,
+    userStats: user.userStats[0] ?? null,
+  }));
+
+  return NextResponse.json(usersWithFirstStats);
 }
 
 export async function POST(req: NextRequest) {

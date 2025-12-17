@@ -19,7 +19,7 @@ export default function HomePage() {
         <div
           className="absolute inset-0 bg-cover bg-center opacity-20"
           style={{
-            backgroundImage: "url(/images/battlefield.avif)",
+            backgroundImage: "url(/images/battlefield-bg.avif)",
           }}
         />
 
@@ -119,8 +119,15 @@ export default function HomePage() {
       </section>
 
       {/* Medals System */}
-      <section className="py-16 md:py-24">
-        <div className="container mx-auto px-4">
+      <section className="py-16 md:py-24 overflow-hidden relative">
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-30"
+          style={{
+            backgroundImage: "url(/images/battlefield-bg-3.avif)",
+          }}
+        />
+
+        <div className="relative container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center mb-12">
             <h2 className="text-3xl md:text-5xl  font-bold mb-4">
               SISTEMA DE <span className="text-primary">MEDALHAS</span>
@@ -201,7 +208,7 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
             <Card className="p-8 border-border bg-card hover:border-primary transition-all group">
               <Link
-                href="https://wa.me/5500000000000"
+                href="https://chat.whatsapp.com/CbKz17jSaUp8S98ZrN3yNa?mode=ems_wa_t"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex flex-col items-center text-center"
@@ -256,7 +263,7 @@ export default function HomePage() {
         <div
           className="absolute inset-0 bg-cover bg-center opacity-30"
           style={{
-            backgroundImage: "url(/images/battlefield-3.avif)",
+            backgroundImage: "url(/images/battlefield-bg-4.png)",
           }}
         />
 
@@ -264,7 +271,7 @@ export default function HomePage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
             <div className="text-center">
               <div className="mb-2 flex items-center justify-center">
-                <Users className="h-8 w-8 text-primary" />
+                <Users className="h-8 w-8 text-green-500" />
               </div>
               <div className="text-3xl md:text-4xl font-bold mb-1">32</div>
               <div className="text-lg">Membros Ativos</div>
@@ -272,7 +279,7 @@ export default function HomePage() {
 
             <div className="text-center">
               <div className="mb-2 flex items-center justify-center">
-                <Trophy className="h-8 w-8 text-accent" />
+                <Trophy className="h-8 w-8 text-yellow-500" />
               </div>
               <div className="text-3xl md:text-4xl font-bold mb-1">127</div>
               <div className="text-lg">Medalhas Conquistadas</div>
@@ -280,7 +287,7 @@ export default function HomePage() {
 
             <div className="text-center">
               <div className="mb-2 flex items-center justify-center">
-                <Crosshair className="h-8 w-8 text-chart-4" />
+                <Crosshair className="h-8 w-8 text-red-500" />
               </div>
               <div className="text-3xl md:text-4xl font-bold mb-1">2.34</div>
               <div className="text-lg">K/D Médio do Clã</div>
@@ -288,7 +295,7 @@ export default function HomePage() {
 
             <div className="text-center">
               <div className="mb-2 flex items-center justify-center">
-                <Zap className="h-8 w-8 text-chart-2" />
+                <Zap className="h-8 w-8 text-blue-500" />
               </div>
               <div className="text-3xl md:text-4xl font-bold mb-1">68%</div>
               <div className="text-lg">Taxa de Vitória</div>

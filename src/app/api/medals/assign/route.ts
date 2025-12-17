@@ -20,7 +20,7 @@ export async function POST(request: Request) {
                 user_id_medal_id: {
                   user_id: userId,
                   medal_id: medalId,
-                },
+                } as any,
               },
               create: { user_id: userId, medal_id: medalId },
               update: {},

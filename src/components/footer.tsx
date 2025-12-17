@@ -24,7 +24,7 @@ export function Footer() {
 
           <div className="flex items-center gap-4">
             <Link
-              href="https://wa.me/5500000000000"
+              href="https://chat.whatsapp.com/CbKz17jSaUp8S98ZrN3yNa?mode=ems_wa_t"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center h-12 w-12 rounded-full bg-secondary hover:bg-accent-foreground/80 transition-colors"
@@ -42,7 +42,7 @@ export function Footer() {
               <DiscordLogoIcon size={32} className="text-blue-500" />
             </Link>
             <Link
-              href="https://instagram.com/yourclan"
+              href="https://www.instagram.com/fight4freedombr/"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center h-12 w-12 rounded-full bg-secondary hover:bg-accent-foreground/80 transition-colors"
@@ -51,7 +51,7 @@ export function Footer() {
               <InstagramLogoIcon size={32} className="text-pink-500" />
             </Link>
             <Link
-              href="https://youtube.com/@yourclan"
+              href="https://www.youtube.com/@Fight4FreedomBR"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center h-12 w-12 rounded-full bg-secondary hover:bg-accent-foreground/80 transition-colors"

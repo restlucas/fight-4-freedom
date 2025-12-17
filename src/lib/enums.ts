@@ -16,3 +16,11 @@ export type Rank =
 export type Role = "ADMIN" | "USER";
 
 export type Rarity = "COMMON" | "RARE" | "EPIC" | "LEGENDARY" | "UNIQUE";
+
+export type TopStatsCategory =
+  | "KILLS_DEATHS"
+  | "KILLS"
+  | "REVIVES"
+  | "ASSISTS"
+  | "MATCHES"
+  | "TIME_PLAYED";

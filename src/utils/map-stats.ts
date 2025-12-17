@@ -1,4 +1,4 @@
-export function mapStats(apiData: any) {
+export const mapStats = (apiData: any) => {
   return {
     kills: apiData.kills,
     deaths: apiData.deaths,
@@ -17,4 +17,29 @@ export function mapStats(apiData: any) {
     bestClass: apiData.bestClass.toUpperCase(),
     winPercent: apiData.winPercent,
   };
-}
+};
+
+export const getBestClass = (className: string) => {
+  const classes = [
+    {
+      name: "Assalto",
+      value: "ASSAULT",
+    },
+    {
+      name: "Recon",
+      value: "RECON",
+    },
+    {
+      name: "Engenheiro",
+      value: "ENGINEER",
+    },
+    {
+      name: "Suporte",
+      value: "SUPPORT",
+    },
+  ];
+
+  const bestClass = classes.find((classItem) => classItem.value === className);
+
+  return bestClass?.name || "";
+};
