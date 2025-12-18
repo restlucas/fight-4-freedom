@@ -16,6 +16,7 @@ export type User = {
   trackergg_link?: string;
   stats: PlayerStats | null;
   status: Status;
+  trackergg?: string;
   userMedals: {
     medal: Medal;
     createdAt: string;

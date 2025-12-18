@@ -50,6 +50,7 @@ const formSchema = z.object({
   platform: z.string().min(1, "Campo obrigatório"),
   ea_id: z.string().min(1, "Campo obrigatório"),
   role: z.string().min(1, "Campo obrigatório"),
+  trackergg: z.string(),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -60,6 +61,7 @@ const defaultValues = {
   platform: "",
   ea_id: "",
   role: "USER",
+  trackergg: "",
 };
 
 export function PlayerModal({
@@ -91,6 +93,7 @@ export function PlayerModal({
         platform: values.platform,
         ea_id: values.ea_id,
         role: values.role,
+        trackergg: values.trackergg,
       });
 
       onClose();
@@ -124,10 +127,12 @@ export function PlayerModal({
         <DialogTitle />
 
         <DialogHeader>
-          <DialogTitle>Adicionar Novo Jogador</DialogTitle>
+          <DialogTitle>
+            {mode === "create" ? "Adicionar Novo Jogador" : "Editar Jogador"}
+          </DialogTitle>
           <DialogDescription>
-            Preencha os dados básicos. Um link de convite será gerado para o
-            jogador acessar o sistema.
+            {mode === "create" &&
+              "Preencha os dados básicos. Um link de convite será gerado para o jogador acessar o sistema."}
           </DialogDescription>
         </DialogHeader>
 
@@ -195,6 +200,26 @@ export function PlayerModal({
                   </FormLabel>
                   <FormControl>
                     <Input placeholder="Ex: DarkWolf#2891" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* ----------- TRACKERGG ----------- */}
+            <FormField
+              control={form.control}
+              name="trackergg"
+              render={({ field }: { field: FieldData }) => (
+                <FormItem>
+                  <FormLabel>
+                    TrackerGG <span className="text-red-500">*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="https://trackergg.com/profile/000000/overview"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

@@ -6,6 +6,7 @@ export type InviteUserPayload = {
   platform: string;
   ea_id: string;
   role: string;
+  trackergg?: string;
 };
 
 export type PreRegisterUserPayload = {
@@ -14,6 +15,7 @@ export type PreRegisterUserPayload = {
   platform: string;
   ea_id: string;
   role: string;
+  trackergg?: string;
 };
 
 export type RegisterUserPayload = {
@@ -32,6 +34,7 @@ export type UpdateUserPayload = {
   username?: string;
   password?: string;
   confirm_password?: string;
+  trackergg?: string;
 };
 
 export const usersService = {

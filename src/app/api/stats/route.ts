@@ -14,7 +14,6 @@ type StatsKeys =
   | "timePlayed";
 
 export async function GET() {
-  // Busca todos os usuários ativos com ea_id
   const users = await prisma.user.findMany({
     where: {
       ea_id: { not: "" },
@@ -30,7 +29,6 @@ export async function GET() {
   const chunks = chunkArray(users, CHUNK_SIZE);
   let processed = 0;
 
-  // Atualiza stats de cada usuário em chunks
   for (const chunk of chunks) {
     await Promise.all(
       chunk.map(async (user) => {

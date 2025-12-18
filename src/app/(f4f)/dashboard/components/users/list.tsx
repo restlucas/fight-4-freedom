@@ -116,6 +116,7 @@ export function UsersTab() {
     setOpenPlayerModal(false);
     setOpenMedalModal(false);
     setOpenDeletePlayerModal(false);
+    setOpenInviteModal(false);
     setSelectedPlayer(null);
   };
 
@@ -261,21 +262,21 @@ export function UsersTab() {
         mode={selectedPlayer ? "update" : "create"}
         player={selectedPlayer!}
         onOpenChange={handleCloseModal}
-        onClose={() => setOpenPlayerModal(false)}
+        onClose={() => handleCloseModal()}
       />
 
       <DeletePlayerModal
         open={openDeletePlayerModal}
         player={selectedPlayer!}
         onOpenChange={handleCloseModal}
-        onClose={() => setOpenDeletePlayerModal(false)}
+        onClose={() => handleCloseModal()}
       />
 
       <InviteLink
         player={selectedPlayer!}
         open={openInviteModal}
         onOpenChange={handleCloseModal}
-        onClose={() => setOpenInviteModal(false)}
+        onClose={() => handleCloseModal()}
       />
     </>
   );

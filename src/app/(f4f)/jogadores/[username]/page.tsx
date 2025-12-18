@@ -10,18 +10,14 @@ import { Button } from "@/src/components/ui/button";
 import {
   ArrowLeft,
   Trophy,
-  Target,
-  Heart,
   Crosshair,
   Clock,
   Percent,
-  Award,
   Angry,
   GamepadIcon,
-  UserRoundX,
   Skull,
   HeartPulse,
-  HandFist,
+  Handshake,
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -187,10 +183,10 @@ export default function PlayerPage() {
           />
 
           <StatCard
-            icon={HandFist}
+            icon={Handshake}
             value={playerStats.assists}
             label="Total de Assists"
-            iconClass="h-5 w-5 text-blue-500"
+            iconClass="h-5 w-5 text-emerald-500"
           />
 
           <StatCard
