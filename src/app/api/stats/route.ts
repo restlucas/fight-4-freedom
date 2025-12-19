@@ -1,6 +1,7 @@
 import { prisma } from "@/src/lib/prisma";
 import { chunkArray } from "@/src/utils/chunk-helper";
 import { mapStats } from "@/src/utils/map-stats";
+import { scrapeStats } from "@/src/utils/scrap-stats";
 import { TopStatsCategory } from "@prisma/client";
 
 const CHUNK_SIZE = 10;
@@ -23,6 +24,7 @@ export async function GET() {
       id: true,
       ea_id: true,
       platform: true,
+      trackergg: true,
     },
   });
 
@@ -33,17 +35,9 @@ export async function GET() {
     await Promise.all(
       chunk.map(async (user) => {
         try {
-          const url = new URL("https://api.gametools.network/bf6/stats");
-          url.searchParams.set("name", String(user.ea_id));
+          if (!user.trackergg) return;
 
-          const res = await fetch(url.toString(), {
-            headers: { "User-Agent": "bf6-stats-sync" },
-            cache: "no-store",
-          });
-
-          if (!res.ok) return;
-
-          const data = await res.json();
+          const data = await scrapeStats(user.trackergg!);
           const mapped = mapStats(data);
 
           await prisma.stats.upsert({

@@ -3,19 +3,19 @@ export const mapStats = (apiData: any) => {
     kills: apiData.kills,
     deaths: apiData.deaths,
     wins: apiData.wins,
-    loses: apiData.loses,
-    killsPerMinute: apiData.killsPerMinute,
-    killsPerMatch: apiData.killsPerMatch,
-    headshots: apiData.headShots,
-    assists: apiData.killAssists,
+    losses: apiData.losses,
+    hsPercent: apiData.hsPercent,
+    assists: apiData.assists,
     revives: apiData.revives,
     killDeath: apiData.killDeath,
-    totalXp: apiData.XP[0].total,
-    matchesPlayed: apiData.matchesPlayed,
-    timePlayed: apiData.timePlayed,
-    accuracy: apiData.accuracy,
+    objectivesCaptured: apiData.objectivesCaptured,
+    objectivesDestroyed: apiData.objectivesDestroyed,
     bestClass: apiData.bestClass.toUpperCase(),
-    winPercent: apiData.winPercent,
+    timePlayed: apiData.timePlayed,
+    matchesPlayed: apiData.wins + apiData.losses,
+    winPercent: ((apiData.wins / (apiData.wins + apiData.losses)) * 100)
+      .toFixed(2)
+      .toString(),
   };
 };
 

@@ -20,6 +20,7 @@ model User {
   rank           Ranks    @default(RECRUTA)
   platform       Platform
   status         Status   @default(PENDING)
+  trackergg      String?
   createdAt      DateTime @default(now())
   
   userStats          Stats[]
@@ -32,27 +33,35 @@ model Stats {
   id        String @id @default(uuid())
   user_id   String @unique
 
-  kills           Int      @default(0)
-  deaths          Int      @default(0)
-  wins            Int      @default(0)
-  loses           Int      @default(0)
-  killsPerMinute  Float    @default(0)
-  killsPerMatch   Float    @default(0)
-  headshots       Int      @default(0)
-  assists         Int      @default(0)
-  revives         Int      @default(0)
-  killDeath       Float    @default(0)
-  totalXp         Int      @default(0)
-  matchesPlayed   Int      @default(0)
-  timePlayed      String?
-  accuracy        String?
-  bestClass       String?
-  winPercent      String?
+  kills               Int      @default(0)
+  deaths              Int      @default(0)
+  wins                Int      @default(0)
+  losses              Int      @default(0)
+  hsPercent           Float    @default(0)
+  assists             Int      @default(0)
+  revives             Int      @default(0)
+  killDeath           Float    @default(0)
+  objectivesCaptured  Int      @default(0)
+  objectivesDestroyed Int      @default(0)
+  matchesPlayed       Int      @default(0)
+  winPercent          String?
+  bestClass           String?
+  timePlayed          String?
 
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
   user      User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model ClanStats {
+  id            String @id @default(uuid())
+  totalMembers  Int @default(0)
+  totalMedals   Int @default(0)
+  averageKd     Float @default(0)
+  averageWins   Float @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
 
 model Medal {

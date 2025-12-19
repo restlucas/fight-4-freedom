@@ -18,6 +18,7 @@ import {
   Skull,
   HeartPulse,
   Handshake,
+  FlagIcon,
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -198,7 +199,7 @@ export default function PlayerPage() {
 
           <StatCard
             icon={Angry}
-            value={playerStats.loses}
+            value={playerStats.losses}
             label="Derrotas"
             iconClass="h-5 w-5 text-primary"
           />
@@ -224,24 +225,19 @@ export default function PlayerPage() {
         <Card className="p-4 border-border gap-2 hover:border-primary/50 transition-all duration-300">
           <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
             <Crosshair className="h-5 w-5 text-primary" />
-            Precisão
+            Combate
           </h3>
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-lg ">Headshots</span>
               <span className="text-2xl font-bold">
-                {playerStats.headshots}
+                {playerStats.hsPercent}
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-lg ">Taxa de Headshot</span>
+              <span className="text-lg ">Kills por partida</span>
               <span className="text-2xl font-bold">
-                {playerStats.headshots && playerStats.kills
-                  ? ((playerStats.headshots / playerStats.kills) * 100).toFixed(
-                      1
-                    )
-                  : 0}
-                %
+                {(playerStats.kills / playerStats.matchesPlayed).toFixed(2)}
               </span>
             </div>
           </div>
@@ -249,20 +245,20 @@ export default function PlayerPage() {
 
         <Card className="p-4 border-border gap-2 hover:border-primary/50 transition-all duration-300">
           <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-            <Percent className="h-5 w-5 text-accent" />
-            Performance
+            <FlagIcon className="h-5 w-5 text-accent" />
+            Objetivos
           </h3>
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-lg ">Kills por partida</span>
+              <span className="text-lg ">Objetivos capturados</span>
               <span className="text-2xl font-bold">
-                {playerStats.killsPerMatch}
+                {playerStats.objectivesCaptured}
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-lg ">Kills por minuto</span>
+              <span className="text-lg ">Objetivos destruídos</span>
               <span className="text-2xl font-bold">
-                {playerStats.killsPerMinute}
+                {playerStats.objectivesDestroyed}
               </span>
             </div>
           </div>

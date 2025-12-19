@@ -18,9 +18,11 @@ import { cn } from "@/src/lib/utils";
 import { useAuth } from "@/src/store/useAuth";
 import { UserAvatarPopover } from "./user-avatar-popover";
 import { useState } from "react";
+import { RankingIcon } from "@phosphor-icons/react";
 
 const navItems = [
   { href: "/", label: "HOME", icon: Target },
+  { href: "/ranking", label: "RANKING", icon: RankingIcon },
   { href: "/jogadores", label: "JOGADORES", icon: Users },
   { href: "/medalhas", label: "MEDALHAS", icon: Trophy },
 ];

@@ -52,17 +52,15 @@ export interface PlayerStats {
   kills: number;
   deaths: number;
   wins: number;
-  loses: number;
-  killsPerMinute: number;
-  killsPerMatch: number;
-  headshots: number;
+  losses: number;
   assists: number;
   revives: number;
   killDeath: number;
-  totalXp: number;
   matchesPlayed: number;
+  hsPercent: number;
+  objectivesCaptured: number;
+  objectivesDestroyed: number;
   timePlayed?: string | null;
-  accuracy?: string;
   bestClass?: string;
   winPercent?: string;
 }
