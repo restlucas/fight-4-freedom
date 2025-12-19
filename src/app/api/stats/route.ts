@@ -1,7 +1,3 @@
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
-
 import { prisma } from "@/src/lib/prisma";
 import { chunkArray } from "@/src/utils/chunk-helper";
 import { mapStats } from "@/src/utils/map-stats";

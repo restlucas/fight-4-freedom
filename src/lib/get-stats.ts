@@ -1,9 +1,6 @@
-import { parseTimePlayed } from "../utils/string";
 import { PlayerStats, UserTopStats } from "./types";
 
 export function getStats(userStats: PlayerStats | null) {
-  const timePlayed = parseTimePlayed(userStats?.timePlayed || "");
-
   return {
     kills: userStats?.kills || 0,
     deaths: userStats?.deaths || 0,
@@ -13,7 +10,7 @@ export function getStats(userStats: PlayerStats | null) {
     revives: userStats?.revives || 0,
     killDeath: userStats?.killDeath || 0,
     matchesPlayed: userStats?.matchesPlayed || 0,
-    timePlayed,
+    timePlayed: userStats?.timePlayed || 0,
     hsPercent: userStats?.hsPercent || 0,
     objectivesCaptured: userStats?.objectivesCaptured || 0,
     objectivesDestroyed: userStats?.objectivesDestroyed || 0,

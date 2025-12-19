@@ -231,7 +231,7 @@ export default function PlayerPage() {
             <div className="flex items-center justify-between">
               <span className="text-lg ">Headshots</span>
               <span className="text-2xl font-bold">
-                {playerStats.hsPercent}
+                {playerStats.hsPercent}%
               </span>
             </div>
             <div className="flex items-center justify-between">
