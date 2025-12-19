@@ -1,9 +1,9 @@
-import puppeteer from "puppeteer-extra";
-import StealthPlugin from "puppeteer-extra-plugin-stealth";
-
-puppeteer.use(StealthPlugin());
-
 export async function scrapeStats(profileUrl: string) {
+  const puppeteer = (await import("puppeteer-extra")).default;
+  const StealthPlugin = (await import("puppeteer-extra-plugin-stealth"))
+    .default;
+
+  puppeteer.use(StealthPlugin());
   const browser = await puppeteer.launch({
     headless: true,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
