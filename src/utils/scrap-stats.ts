@@ -2,6 +2,9 @@ const SCRAPER_SERVICE_API_KEY = process.env.SCRAPER_SERVICE_API_KEY || "";
 const SCRAPER_SERVICE_API_URL = process.env.SCRAPER_SERVICE_API_URL || "";
 
 export async function scrapeStats(profileUrl: string) {
+  console.log(
+    `${SCRAPER_SERVICE_API_URL}/scrape?url=${encodeURIComponent(profileUrl)}`
+  );
   try {
     const response = await fetch(
       `${SCRAPER_SERVICE_API_URL}/scrape?url=${encodeURIComponent(profileUrl)}`,
@@ -12,6 +15,7 @@ export async function scrapeStats(profileUrl: string) {
       }
     );
 
+    console.log(response);
     if (!response.ok) return null;
     return await response.json();
   } catch (err) {
