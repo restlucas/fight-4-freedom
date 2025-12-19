@@ -38,6 +38,7 @@ export async function GET() {
           if (!user.trackergg) return;
 
           const data = await scrapeStats(user.trackergg!);
+          console.log(data);
           const mapped = mapStats(data);
 
           await prisma.stats.upsert({
