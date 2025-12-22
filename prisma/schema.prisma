@@ -153,3 +153,9 @@ enum TopStatsCategory {
   MATCHES
   TIME_PLAYED
 }
+
+enum RankingStatus {
+  PENDING     
+  RUNNING     
+  CLOSED      
+}

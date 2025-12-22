@@ -71,3 +71,10 @@ export interface UserTopStats {
   user_id: string;
   updatedAt: string;
 }
+
+export type ClanStats = {
+  totalMembers: number;
+  totalMedals: number;
+  averageKd: number;
+  averageWins: number;
+};

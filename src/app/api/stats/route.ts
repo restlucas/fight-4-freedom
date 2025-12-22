@@ -80,6 +80,50 @@ export async function GET() {
     }
   }
 
+  const [membersCount, medalsCount, kdAgg, totals] = await Promise.all([
+    prisma.user.count({
+      where: {
+        ea_id: { not: "" },
+        status: "ACTIVE",
+      },
+    }),
+
+    prisma.userMedal.count(),
+
+    prisma.stats.aggregate({
+      _avg: { killDeath: true },
+    }),
+
+    prisma.stats.aggregate({
+      _sum: {
+        wins: true,
+        matchesPlayed: true,
+      },
+    }),
+  ]);
+
+  const totalWins = totals._sum.wins ?? 0;
+  const totalMatches = totals._sum.matchesPlayed ?? 0;
+
+  const clanWinRate = totalMatches > 0 ? (totalWins / totalMatches) * 100 : 0;
+
+  await prisma.clanStats.upsert({
+    where: { id: "f4f-stats" },
+    update: {
+      totalMembers: membersCount,
+      totalMedals: medalsCount,
+      averageKd: kdAgg._avg.killDeath ?? 0,
+      averageWins: clanWinRate,
+    },
+    create: {
+      id: "f4f-stats",
+      totalMembers: membersCount,
+      totalMedals: medalsCount,
+      averageKd: kdAgg._avg.killDeath ?? 0,
+      averageWins: clanWinRate,
+    },
+  });
+
   return Response.json({
     ok: true,
     totalUsers: users.length,

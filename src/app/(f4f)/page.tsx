@@ -10,8 +10,11 @@ import {
   HardDrivesIcon,
   WhatsappLogoIcon,
 } from "@phosphor-icons/react";
+import { useClanStats } from "@/src/queries/clan/useClanStats";
 
 export default function HomePage() {
+  const { data: clanStats } = useClanStats();
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -273,7 +276,9 @@ export default function HomePage() {
               <div className="mb-2 flex items-center justify-center">
                 <Users className="h-8 w-8 text-green-500" />
               </div>
-              <div className="text-3xl md:text-4xl font-bold mb-1">32</div>
+              <div className="text-3xl md:text-4xl font-bold mb-1">
+                {clanStats?.totalMembers}
+              </div>
               <div className="text-lg">Membros Ativos</div>
             </div>
 
@@ -281,7 +286,9 @@ export default function HomePage() {
               <div className="mb-2 flex items-center justify-center">
                 <Trophy className="h-8 w-8 text-yellow-500" />
               </div>
-              <div className="text-3xl md:text-4xl font-bold mb-1">127</div>
+              <div className="text-3xl md:text-4xl font-bold mb-1">
+                {clanStats?.totalMedals}
+              </div>
               <div className="text-lg">Medalhas Conquistadas</div>
             </div>
 
@@ -289,7 +296,9 @@ export default function HomePage() {
               <div className="mb-2 flex items-center justify-center">
                 <Crosshair className="h-8 w-8 text-red-500" />
               </div>
-              <div className="text-3xl md:text-4xl font-bold mb-1">2.34</div>
+              <div className="text-3xl md:text-4xl font-bold mb-1">
+                {clanStats?.averageKd.toFixed(2)}
+              </div>
               <div className="text-lg">K/D Médio do Clã</div>
             </div>
 
@@ -297,7 +306,9 @@ export default function HomePage() {
               <div className="mb-2 flex items-center justify-center">
                 <Zap className="h-8 w-8 text-blue-500" />
               </div>
-              <div className="text-3xl md:text-4xl font-bold mb-1">68%</div>
+              <div className="text-3xl md:text-4xl font-bold mb-1">
+                {clanStats?.averageWins.toFixed(1)}
+              </div>
               <div className="text-lg">Taxa de Vitória</div>
             </div>
           </div>
